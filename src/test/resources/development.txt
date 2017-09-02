@@ -1,0 +1,88 @@
+delete from contractor;
+delete from agent;
+delete from TaxisurfrUser;
+
+insert into TaxisurfrUser (id,email,admin,agentId) VALUES (1,'dispatch@taxisurfr.com',true,1);
+
+insert into Agent (id) VALUES (1);
+insert into Agent (id,email) VALUES (100,'taxisurfrcontractor@gmail.com');
+insert into Agent (id) VALUES (101);
+
+
+insert into Contractor ( id, address1, address2, address3, address4, agentid, name) VALUES(1,'Mr. Sanju ','+94 777 21 26 30','','',100,'Sanju Travels');
+
+
+
+delete from Profile;
+insert into Profile ( id,monitoremail, stripepublishable,stripesecret, test,sendgridkey,taxisurfUrlClient) VALUES(1, 'dispatch@taxisurfr.com','pk_test_rcKuNpP9OpTri7twmZ77UOI5','sk_test_TCIbuNPlBRe4VowPhqekTO1L',true,'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','http://localhost:3000');
+
+delete from Route;
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(100,1,1,'Colombo Airport','Unawatuna',11000,4000,'unawatuna',null,false,'Three hours.drive. 127km. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(101,1,1,'Colombo Airport','Kalpitiya',9500,4000,'kalpitiya',null,false,'Approx. 3 to 4 hrs. transfer time. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(102,1,1,'Colombo Airport','Mirissa',9000,4000,'airportmirissa',null,false,'Direct to your hotel in Mirissa with personal pickup at the International Airport. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(103,1,1,'Colombo Airport','Weligama',11000,5000,'airportweligama',null,false,'Direct to the Aussie Swiss Resort with personal pickup at the International Airport. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(104,1,1,'Colombo Airport','Arugam Bay',12000,4000,'arugambay',null,false,'Our trusted, approved driver will pick you up from the airport. The transit distance is 355 km and will take approx. 8 hrs. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(107,1,1,'Colombo Airport','Weligama',11000,4000,'jagabay',null,false,'Direct to the Jagabay Resort with personal pickup at the International Airport. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(108,1,1,'Colombo Airport','Galle',8500,3000,'airportgalle',null,false,'Direct to Galle. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(109,1,1,'Colombo Airport','Yala Tissamaharama',6700,4000,'airportyala',null,false,'Direct to Galle. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(110,1,1,'Colombo Airport','Tangalle',9900,4000,'airporttangalle',null,false,'Direct to Tangalle. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(111,1,1,'Colombo Airport','Kandy',9500,4000,'airportkandy',null,false,'Approximately 4 hours transfer time. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(112,1,1,'Colombo Airport','Arugam Bay - !return!',22500,4000,'arugambayreturn',null,false,'Pickup at the airport and direct to Arugam Bay. This is an all inclusive return package. Put your return details in the *Other requirements* section on the booking page');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(99100,1,3,'Colombo Airport','Arugam Bay - !shuttle!',1900,4000,'arugambayshuttle',null,false,'12:01 midday');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(99200,1,4,'Arugam Bay','Colombo Airport - !shuttle!',1900,4000,'abayairportshuttle',null,false,'19:01');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(99201,0,4,'Arugam Bay','Ella - shuttle',900,4000,'abayellashuttle',null,false,'12:00 midday');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(200,1,0,'Colombo Downtown','Unawatuna',11000,5000,'colombounawatuna',null,false,'Three hours.drive. 127km. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(201,1,0,'Colombo Downtown','Kalpitiya',9500,4000,'colombokalpitiya',null,false,'Approx. 3 to 4 hrs. transfer time. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(202,1,0,'Colombo Downtown','Mirissa',11000,5000,'colombomirissa',null,false,'Direct to your hotel in Mirissa with personal pickup at the International Airport. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(203,1,0,'Colombo Downtown','Weligama',11000,5000,'colomboweligama',null,false,'Direct to the Aussie Swiss Resort with personal pickup at the International Airport. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(204,1,0,'Colombo Downtown','Arugam Bay',12000,4000,'colomboabay',null,false,'Our trusted, approved driver will pick you up from your hotel in Colombo. The transit distance is 355 km and will take approx. 8 hrs. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(115,1,0,'Colombo Downtown','Kandy',9500,4000,'colombokandy',null,false,'Approximately 4 hours transfer time. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1000,1,0,'Arugam Bay','Galle',14000,4000,'abaygalle',null,false,'Approximately 7 hours transfer time. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1001,1,0,'Arugam Bay','Polunaruwa',12000,4000,'abayplunaruwa',null,false,'The trip takes you via Batticaloa and Kalmunai, all along the East Coast Road. Allow 6 hrs. for this trip . All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1002,1,0,'Arugam Bay','Bandarawella',9000,4000,'ababandarawella',null,false,'Colombo via Kandy. Allow min. 4 hrs. to get there from Arugam Bay. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1003,1,0,'Arugam Bay','Ella',5800,3000,'abayella',null,false,'Approximately 140km /3 hrs. journey. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1004,1,0,'Arugam Bay','Tangalle',9900,4000,'abaytangalle',null,false,'Approximately 5 hours transfer time. All fuel charges and expenses are included..');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1005,1,0,'Arugam Bay','Akkaraipattu',4500,2000,'abayakkaraipattu',null,false,'Approx. 1 hr. or so trip only. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1006,1,0,'Arugam Bay','Nuwara Eliya',9700,4000,'abaynuwaraeliya',null,false,'Takes about 6 hrs. or even more. All fuel charges and expenses are included..');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1007,1,0,'Arugam Bay','Midigama',13000,4000,'abaymidigama',null,false,'Allow 6 hrs. for this nice trip. All fuel charges and expenses are included..');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1008,1,0,'Arugam Bay','Kalpitiya',18000,4000,'abaykalpitiya',null,false,'Connecting the two very best surf resorts with each other: Kalpitiya and Arugam Bay.  It will take you at least 8 to 9 hours. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1009,1,0,'Arugam Bay','Hikkaduwa',12600,4000,'abayhikkaduwa',null,false,'Allow 7 hrs. min. for this transfer. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1010,1,0,'Arugam Bay','Colombo Airport',12000,4000,'abayairport',null,false,'Our trusted, approved driver will pick you up from your hotel. The transit distance is 355 km and will take approx. 8 hrs. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1011,1,0,'Arugam Bay','Yala Tissamaharama',6700,3000,'abayyala',null,false,'Approximately 4 hrs.transfer duration. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1012,1,0,'Arugam Bay','Mirissa',10200,4000,'abayyala',null,false,'Approximately 4 hrs.transfer duration. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1013,1,0,'Arugam Bay','Kandy',9800,3000,'abaykandy',null,false,'Pickup in Arugam Bay direct to Kandy. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1014,1,0,'Arugam Bay','Batikallo',5600,2000,'abaybatikallo',null,false,'Pickup in Arugam Bay direct to Batikallo. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1015,1,0,'Arugam Bay','Passikuda',7600,3000,'abaypassikuda',null,false,'Pickup in Arugam Bay direct to Batikallo. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1016,1,0,'Arugam Bay','Trinco',10200,3000,'abaytrinco',null,false,'Pickup in Arugam Bay direct to Trinco. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1017,1,0,'Arugam Bay','Udawalawa',8600,3000,'abayudawalawa',null,false,'Pickup in Arugam Bay direct to Trinco. All fuel charges and expenses are included.');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1100,1,0,'Yala Tissamaharama','Arugam Bay',6700,2000,'yalaabay',null,false,'Approximately 4 hrs.transfer duration. All fuel charges and expenses are included.');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1200,1,0,'Ella','Arugam Bay',5800,2000,'ellaabay',null,false,'Approximately 3 hours for a140km  journey. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1300,1,0,'Kandy','Arugam Bay',9800,4000,'kandyabay',null,false,'Allow 6 to 7 hours for this trip, as the roads are still not very smooth inland. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1301,1,0,'Kandy','Colombo Airport',9500,4000,'kandyairport',null,false,'Approximately 4 hours transfer time. All fuel charges and expenses are included.');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1400,1,0,'Weligama','Arugam Bay',13000,4000,'weligamaabay',null,false,'Allow 6 hrs. for this nice trip. All fuel charges and expenses are included..');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1401,1,0,'Weligama','Colombo Airport',11000,5000,'weligamaairport',null,false,'Direct to the Aussie Swiss Resort with personal pickup at the International Airport. All fuel charges and expenses are included.');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1500,1,0,'Mirissa','Colombo Airport',9000,4000,'mirissaairport',null,false,'Direct to your hotel in Mirissa with personal pickup at the International Airport. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1501,1,0,'Mirissa','Arugam Bay',10200,4000,'mirissaabay',null,false,'Approximately 4 hrs.transfer duration. All fuel charges and expenses are included.');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1600,1,0,'Galle','Colombo Airport',8500,3000,'galleairport',null,false,'Direct to Airport. All fuel charges and expenses are included.');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1700,1,0,'Tangalle','Colombo Airport',9900,4000,'tangalleairport',null,false,'Pickup in Tangalle. All fuel charges and expenses are included.');
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1701,1,0,'Tangalle','Arugam Bay',9900,4000,'tangalleabay',null,false,'Approximately 5 hours transfer time. All fuel charges and expenses are included..');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1800,1,0,'Batikallo','Arugam Bay',5600,2000,'batikalloabay',null,false,'Pickup in Arugam Bay direct to Batikallo. All fuel charges and expenses are included.');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(1900,1,0,'Passikuda','Arugam Bay',7600,3000,'passikudaabay',null,false,'Pickup in Passikuda direct to Arugam Bay. All fuel charges and expenses are included.');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(2000,1,0,'Trinco','Arugam Bay',10200,3000,'trincoabay',null,false,'Pickup in Trinco direct to Arugam Bay. All fuel charges and expenses are included.');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(2100,1,0,'Nuwara Eliya','Arugam Bay',9700,4000,'nuwaraeliyaabay',null,false,'Takes about 6 hrs. or even more. All fuel charges and expenses are included..');
+
+insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(2200,1,0,'Udawalawa','Arugam Bay',8600,3000,'udawalawaabay',null,false,'Pickup in Arugam Bay direct to Trinco. All fuel charges and expenses are included.');
+

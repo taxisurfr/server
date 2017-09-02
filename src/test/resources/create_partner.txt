@@ -1,0 +1,30 @@
+CREATE TABLE Partner
+(
+id int,
+name varchar(255),
+code varchar(255),
+email varchar(255),
+bankAccount1 varchar(255),
+bankAccount2 varchar(255),
+bankAccount3 varchar(255),
+bankAccount4 varchar(255)
+);
+
+alter table route add column partnerCode varchar(255);
+
+insert into Partner (id,name,code,email,bankAccount1,bankAccount2,bankAccount3,bankAccount4) VALUES(1000,'paradise beach club','mirissa@sltnet.lk');
+insert into Partner (id,name,code,email,bankAccount1,bankAccount2,bankAccount3,bankAccount4) VALUES(1001,'Handagedara Colonial Villa','handagedara@gmail.com');
+insert into Partner (id,name,code,email,bankAccount1,bankAccount2,bankAccount3,bankAccount4) VALUES(1002,'Number One Mirissa','info@numberonemirissa.com');
+insert into Partner (id,name,code,email,bankAccount1,bankAccount2,bankAccount3,bankAccount4) VALUES(1003,'Esprit d'Ici Hotel','info@numberonemirissa.com');
+
+insert into Partner (id,name,code,email,bankAccount1,bankAccount2,bankAccount3,bankAccount4) VALUES(1003,'Esprit d'Ici Hotel','info@numberonemirissa.com');
+
+inse
+
+Esprit d'Ici Hotel
+,
+ ,
+number one,
+sudu weli mirissa inn ,
+dinu resort .
+weligama bay resort

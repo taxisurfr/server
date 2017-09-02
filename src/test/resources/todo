@@ -1,0 +1,18 @@
+customer wants to see an image
+we want a test mode
+marketer want to see the src info
+
+customer want a sharing function
+agent wants to authenicate
+agent wants to see his bookings
+agent wants to see his finances
+agent wants to add an empty car
+db admin wants to add columns to the production db
+
+done & to test
+customer wants more routes than we have
+we want a route from colombo airport to arugam bay
+customer wants a link to route
+
+insert into Profile ( id,monitoremail, stripepublishable,stripesecret, test,sendgridkey) VALUES(1, 'dispatch@taxisurfr.com','pk_live_rM0BsbujtlKexSOwNL7WTZGj','sk_live_Vt2nWzrfS8TZzkRFpg66DBgZ',true,'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');
+k

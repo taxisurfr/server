@@ -1,0 +1,1 @@
+openssl req -new -newkey rsa:2048 -nodes -out app_taxisurfr_com.csr -keyout app_taxisurfr_com.key -subj "/C=DE/ST=/L=munich/O=taxisurfr.com/OU=app/CN=*.rhcloud.com"

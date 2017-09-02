@@ -1,0 +1,14 @@
+update route set cents=8500 where startroute='Colombo Airport' and endroute='Galle';
+update route set cents=9000 where startroute='Colombo Airport' and endroute='Mirissa';
+update route set cents=6700 where startroute='Colombo Airport' and endroute='Yala Tissamaharama';
+update route set cents=6700 where startroute='Colombo Airport' and endroute='Yala Tissamaharama';
+update route set cents=9900 where startroute='Colombo Airport' and endroute='Tangalle';
+
+update route set cents=12000 where startroute='Arugam Bay' and endroute='Colombo Airport';
+update route set cents=5800 where startroute='Arugam Bay' and endroute='Ella';
+update route set cents=9900 where startroute='Arugam Bay' and endroute='Tangalle';
+update route set cents=6700 where startroute='Arugam Bay' and endroute='Yala Tissamaharama';
+update route set cents=10200 where startroute='Arugam Bay' and endroute='Mirissa';
+update route set cents=9800 where startroute='Arugam Bay' and endroute='Kandy';
+update route set cents=5600 where startroute='Arugam Bay' and endroute='Batikallo';
+update route set cents=12600 where startroute='Arugam Bay' and endroute='Hikkaduwa';

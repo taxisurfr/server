@@ -1,0 +1,2 @@
+openssl genrsa -des3 -out taxisurfr.com.key 2048
+openssl req -new -key taxisurfr.com.key -out taxisurfr.com.csr
