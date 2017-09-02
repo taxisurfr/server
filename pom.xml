@@ -318,6 +318,7 @@
                 </testResources>
                 <finalName>taxisurfr</finalName>
 
+<!--
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -327,7 +328,7 @@
                             <failOnMissingWebXml>false</failOnMissingWebXml>
                             <outputDirectory>deployments</outputDirectory>
                             <warName>ROOT</warName>
-                            <!--<packagingExcludes>dashboard/**</packagingExcludes>-->
+                            &lt;!&ndash;<packagingExcludes>dashboard/**</packagingExcludes>&ndash;&gt;
                             <webResources>
                                 <resource>
                                     <directory>build</directory>
@@ -341,6 +342,7 @@
                         </configuration>
                     </plugin>
                 </plugins>
+-->
             </build>
         </profile>
         <profile>
