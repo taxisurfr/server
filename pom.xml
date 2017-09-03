@@ -238,62 +238,6 @@
 
     </dependencies>
 
-    <build>
-
-
-        <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <archive>
-                        <manifestEntries>
-                            <Dependencies>org.postgres</Dependencies>
-                        </manifestEntries>
-                    </archive>
-                    <!--<outputDirectory>deployments</outputDirectory>-->
-                    <!--<warName>ROOT</warName>-->
-                    <!--<packagingExcludes>dashboard/**</packagingExcludes>-->
-                </configuration>
-            </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.liquibase</groupId>-->
-            <!--<artifactId>liquibase-maven-plugin</artifactId>-->
-            <!--<version>3.0.5</version>-->
-            <!--<configuration>-->
-            <!--<propertyFile>src/main/resources/liquibase/liquibase.properties</propertyFile>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<phase>process-resources</phase>-->
-            <!--<goals>-->
-            <!--<goal>update</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-war-plugin</artifactId>-->
-            <!--<version>2.3</version>-->
-            <!--<configuration>-->
-            <!--<failOnMissingWebXml>false</failOnMissingWebXml>-->
-            <!--<outputDirectory>deployments</outputDirectory>-->
-            <!--&lt;!&ndash;<warName>ROOT</warName>&ndash;&gt;-->
-            <!--<packagingExcludes>dashboard/**</packagingExcludes>-->
-            <!--<webResources>-->
-            <!--<resource>-->
-            <!--<directory>build</directory>-->
-            <!--</resource>-->
-            <!--</webResources>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
-        </plugins>
-    </build>
-
     <profiles>
         <profile>
             <!-- When built in OpenShift the 'openshift' profile will be used when invoking mvn. -->
@@ -301,24 +245,8 @@
             <!-- By default that is to put the resulting archive into the 'deployments' folder. -->
             <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
             <id>openshift</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.wildfly</groupId>
-                    <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>8.2.1.Final</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
             <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                        <filtering>true</filtering>
-                    </testResource>
-                </testResources>
-                <finalName>taxisurfr</finalName>
-
-<!--
+                <finalName>SampleApp</finalName>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -326,143 +254,12 @@
                         <version>2.3</version>
                         <configuration>
                             <failOnMissingWebXml>false</failOnMissingWebXml>
-                            <outputDirectory>deployments</outputDirectory>
+                            <outputDirectory>target</outputDirectory>
                             <warName>ROOT</warName>
-                            &lt;!&ndash;<packagingExcludes>dashboard/**</packagingExcludes>&ndash;&gt;
-                            <webResources>
-                                <resource>
-                                    <directory>build</directory>
-                                </resource>
-                            </webResources>
-                            <archive>
-                                <manifestEntries>
-                                    <Dependencies>org.postgres</Dependencies>
-                                </manifestEntries>
-                            </archive>
-                        </configuration>
-                    </plugin>
-                </plugins>
--->
-            </build>
-        </profile>
-        <profile>
-            <!-- When built in OpenShift the 'openshift' profile will be used when invoking mvn. -->
-            <!-- Use this profile for any OpenShift specific customization your app will need. -->
-            <!-- By default that is to put the resulting archive into the 'deployments' folder. -->
-            <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
-            <id>local</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <version>2.3</version>
-                        <configuration>
-                            <failOnMissingWebXml>false</failOnMissingWebXml>
-                            <!--<outputDirectory>deployments</outputDirectory>-->
-                            <!--<warName>ROOT</warName>-->
-                            <!--<packagingExcludes>dashboard/**</packagingExcludes>-->
-                            <webResources>
-                                <resource>
-                                    <directory>build</directory>
-                                </resource>
-                            </webResources>
-                        </configuration>
-                    </plugin>
-                    <!--<plugin>-->
-                    <!--<groupId>com.github.eirslett</groupId>-->
-                    <!--<artifactId>frontend-maven-plugin</artifactId>-->
-                    <!--<version>0.0.26</version>-->
-                    <!--<executions>-->
-                    <!--<execution>-->
-                    <!--<id>prepare_war</id>-->
-                    <!--<goals>-->
-                    <!--<goal>gulp</goal>-->
-                    <!--</goals>-->
-                    <!--&lt;!&ndash; Optional configuration which provides for running any npm command &ndash;&gt;-->
-                    <!--<configuration>-->
-                    <!--<arguments>prepare_war</arguments>-->
-                    <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--</executions>-->
-                    <!--</plugin>-->
-                </plugins>
-
-            </build>
-        </profile>
-        <profile>
-            <id>integrationtest</id>
-            <properties>
-                <browser>chromium-browser</browser>
-                <serverRoot>${project.build.directory}/wildfly-${org.wildfly}</serverRoot>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.wildfly</groupId>
-                    <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>8.2.1.Final</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                        <filtering>true</filtering>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-wildfly-managed</directory>
-                        <filtering>true</filtering>
-                    </testResource>
-                </testResources>
-
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <!--<execution>-->
-                            <!--<id>unpack</id>-->
-                            <!--<phase>process-test-classes</phase>-->
-                            <!--<goals>-->
-                            <!--<goal>unpack</goal>-->
-                            <!--</goals>-->
-                            <!--<configuration>-->
-                            <!--<artifactItems>-->
-                            <!--<artifactItem>-->
-                            <!--<groupId>org.wildfly</groupId>-->
-                            <!--<artifactId>wildfly-atron</artifactId>-->
-                            <!--<version>${org.wildfly}_Keycloak</version>-->
-                            <!--<type>zip</type>-->
-                            <!--<overWrite>false</overWrite>-->
-                            <!--<outputDirectory>${project.build.directory}</outputDirectory>-->
-                            <!--</artifactItem>-->
-                            <!--</artifactItems>-->
-                            <!--</configuration>-->
-                            <!--</execution>-->
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.18.1</version>
-                        <configuration>
-                            <environmentVariables>
-                                <JBOSS_HOME>C:\SWTOOLS\postgres_wildfly\wildfly-9.0.2.Final
-                                </JBOSS_HOME>
-                                <!--<JBOSS_HOME>C:\SWTOOLS\wildfly-10.0.0.Final_postgres</JBOSS_HOME>-->
-                            </environmentVariables>
-                            <systemPropertyVariables>
-                                <arquillian.launch>wildfly</arquillian.launch>
-                            </systemPropertyVariables>
-                            <includes>
-                                <include>*IntegrationTest</include>
-                            </includes>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
-
     </profiles>
 </project>
