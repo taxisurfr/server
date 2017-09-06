@@ -62,7 +62,7 @@ public class AdminEndpoint {
                 + "  \"title\": \"The Basics - Networking\",\n"
                 + "  \"description\": \"Your app fetched this from a remote endpoint!\",\n"
                 + "  \"movies\": [\n"
-                + "    { \"title\": \"Star Wars\", \"releaseYear\": \"1977\"},\n"
+                + "    { \"title\": \"Star Wars\", \"releaseYear\": \"19\"},\n"
                 + "    { \"title\": \"Back to the Future\", \"releaseYear\": \"1985\"},\n"
                 + "    { \"title\": \"The Matrix\", \"releaseYear\": \"1999\"},\n"
                 + "    { \"title\": \"Inception\", \"releaseYear\": \"2010\"},\n"
@@ -81,7 +81,7 @@ public class AdminEndpoint {
     public String films_no() throws IllegalArgumentException {
         logger.info("");
         String result = "{\n"
-                + "  \"title\": \"The Basics - Networking\",\n"
+                + "  \"title\": \"The new version\",\n"
                 + "  \"description\": \"Your app fetched this from a remote endpoint!\",\n"
                 + "  \"movies\": [\n"
                 + "    { \"title\": \"Star Wars\", \"releaseYear\": \"1977\"},\n"
