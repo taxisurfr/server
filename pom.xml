@@ -7,9 +7,8 @@
     <groupId>taxisurfr</groupId>
     <artifactId>taxisurfr</artifactId>
     <packaging>war</packaging>
-    <version>1.0</version>
+    <version>1</version>
     <name>taxisurfr</name>
-
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
