@@ -11,9 +11,9 @@ import com.taxisurfr.util.SendGridSender;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Column;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -49,7 +49,7 @@ public class BookingManager extends AbstractDao<Booking> {
         booking.setRoute(route);
         booking.setAgent(agent.getId());
         booking.setContractor(contractor.getId());
-        booking.setDate(LocalDateTime.ofInstant(newBooking.date.toInstant(), ZoneId.systemDefault()));
+        booking.setDate(new Timestamp(newBooking.date.getTime()));
         booking.setName(newBooking.name);
         booking.setEmail(newBooking.email);
         sender.addRecepient(profileManager.getProfile(), newBooking.email);
@@ -88,7 +88,7 @@ public class BookingManager extends AbstractDao<Booking> {
                     .setParameter("orderType2", OrderType.SHARE_ANNOUNCEMENT)
                     .getResultList();
             for (Booking booker : resultList) {
-                if (booker.getDate().isAfter(LocalDateTime.now())) {
+                if (booker.getDate().toLocalDateTime().isAfter(LocalDateTime.now())) {
                     if (
                             (
                                     booker.getStatus().equals(BookingStatus.PAID) && booker.getOrderType().equals(OrderType.BOOKING))

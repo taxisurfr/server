@@ -2,7 +2,8 @@ package com.taxisurfr.domain;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @XmlRootElement
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
     {
         bookingStatus = BookingStatus.BOOKED;
         orderType = OrderType.BOOKING;
-        instanziated = LocalDateTime.now();
+        instanziated = new Timestamp(new Date().getTime());
 
         rated = false;
     }
@@ -40,7 +41,7 @@ import java.time.LocalDateTime;
     @Lob private byte[] pdf;
     @Column private String ref;
     @Column private Boolean shareWanted;
-    @Column private LocalDateTime instanziated;
+    @Column private Timestamp instanziated;
     @Column private OrderType orderType;
     private Long parentId;
     @ManyToOne private Route route;
@@ -48,14 +49,14 @@ import java.time.LocalDateTime;
     @Column private Long contractor;
     private Boolean rated;
     private String stripeRefusal;
-    @Column private LocalDateTime date;
+    @Column private Timestamp date;
     @Column private Currency currency = Currency.USD;
 
-    public LocalDateTime getDate()
+    public Timestamp getDate()
     {
         return date;
     }
-    public void setDate(LocalDateTime date)
+    public void setDate(Timestamp date)
     {
         this.date = date;
     }
@@ -134,12 +135,12 @@ import java.time.LocalDateTime;
         this.orderType = orderType;
     }
 
-    public LocalDateTime getInstanziated()
+    public Timestamp getInstanziated()
     {
         return instanziated;
     }
 
-    public void setInstanziated(LocalDateTime instanziated)
+    public void setInstanziated(Timestamp instanziated)
     {
         this.instanziated = instanziated;
     }
@@ -260,7 +261,7 @@ import java.time.LocalDateTime;
         // compareTo should return < 0 if this is supposed to be
         // less than other, > 0 if this is supposed to be greater than
         // other and 0 if they are supposed to be equal
-        return this.instanziated.isAfter(instanziated) ? -1 : -1;
+        return this.instanziated.toLocalDateTime().isAfter(instanziated.toLocalDateTime()) ? -1 : -1;
     }
 
 

@@ -3,7 +3,7 @@ package com.taxisurfr.domain;
 
 import javax.enterprise.inject.Model;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Model
@@ -12,7 +12,7 @@ public class ArchivedBooking implements Serializable, Comparable<ArchivedBooking
 
     private static final long serialVersionUID = 1L;
 
-    private LocalDateTime date;
+    private Timestamp date;
     private BookingStatus orderStatus;
 
     private String name;
@@ -29,12 +29,12 @@ public class ArchivedBooking implements Serializable, Comparable<ArchivedBooking
     private OrderType orderType;
     private Long route;
 
-    public LocalDateTime getDate()
+    public Timestamp getDate()
     {
         return date;
     }
 
-    public void setDate(LocalDateTime date)
+    public void setDate(Timestamp date)
     {
         this.date = date;
     }

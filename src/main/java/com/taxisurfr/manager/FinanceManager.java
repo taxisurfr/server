@@ -57,7 +57,7 @@ public class FinanceManager extends AbstractDao<Finance> {
             for (Finance finance : payments) {
                 Booking booking = bookingManager.find(finance.getBookingId());
 
-                if (booking==null || booking.getDate().isBefore(now)) {
+                if (booking==null || booking.getDate().toLocalDateTime().isBefore(now)) {
                     carriedOutOrders +=finance.getAmount();
                 } else {
                     openOrders += finance.getAmount();
