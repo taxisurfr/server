@@ -1,9 +1,7 @@
 package com.taxisurfr.domain;
 
-import javax.enterprise.inject.Model;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 public class SessionStat implements java.io.Serializable {
@@ -44,7 +42,7 @@ public class SessionStat implements java.io.Serializable {
 
     @Column String routeKey;
 
-    @Column
+    //@Column
     LocalDateTime time;
 
     public void setTime(LocalDateTime time) {

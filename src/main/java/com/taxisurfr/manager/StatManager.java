@@ -39,8 +39,10 @@ public class StatManager extends AbstractDao<SessionStat> {
 
     public SessionStat addSession() {
         SessionStat sessionStat = new SessionStat();
+/*
         sessionStat.setTime(LocalDateTime.now());
         persist(sessionStat);
+*/
         return sessionStat;
     }
 
