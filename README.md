@@ -20,7 +20,7 @@ oc new-app postgresql-persistent -p POSTGRESQL_DATABASE=taxisurfr -p POSTGRESQL_
 oc get pods
 oc rsync data postgresql-1-8cj93:/var/lib/pgsql
 gunzip taxisufr.gz
-psql postgresql < /var/lib/pgsql/data/taxisufrf.gz
+psql taxisurfr < /var/lib/pgsql/data/taxisufrf.gz
 
 psql -d taxisurfr
 
@@ -32,3 +32,6 @@ Username: userB2K
        Password: IP7l2njiVidYDRhl
   Database Name: taxisurfr
  Connection URL: postgresql://postgresql:5432/
+ 
+ 
+ client-taxisurfr.rhcloud.com
