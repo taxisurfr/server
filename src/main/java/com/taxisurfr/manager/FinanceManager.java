@@ -4,10 +4,11 @@ import com.taxisurfr.domain.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -102,8 +103,8 @@ public class FinanceManager extends AbstractDao<Finance> {
                     financeDetail.name = booking != null ? booking.getOrderRef() : "deleted";
                     financeDetail.currency = finance.getCurrency().symbol;
                     financeDetail.amount = (float) (finance.getAmount());
-                    financeDetail.datetime = finance.getDate().toInstant(ZoneOffset.UTC).getEpochSecond() * 1000;
-                    financeDetail.dateText = finance.getDate().format(formatter);
+                    financeDetail.datetime = finance.getDate().getTime();
+                    financeDetail.dateText = finance.getDate().toLocalDateTime().format(formatter);
                     financeDetail.bookingId = finance.getBookingId();
                     return financeDetail;
                 }
@@ -116,7 +117,7 @@ public class FinanceManager extends AbstractDao<Finance> {
                     financeDetail.name = finance.getName();
 
                     financeDetail.currency = finance.getCurrency().symbol;
-                    financeDetail.dateText = finance.getDate().format(formatter);
+                    financeDetail.dateText = finance.getDate().toLocalDateTime().format(formatter);
                     financeDetail.amount = (float) (finance.getAmount());
                     return financeDetail;
                 }
@@ -136,7 +137,7 @@ public class FinanceManager extends AbstractDao<Finance> {
         Finance finance = new Finance();
         finance.setAgentEmail(agent.getEmail());
         finance.setType(FinanceType.TRANSFER);
-        finance.setDate(LocalDateTime.now());
+        finance.setDate(new Timestamp(new Date().getTime()));
 
         getEntityManager().persist(finance);
 
@@ -190,7 +191,7 @@ public class FinanceManager extends AbstractDao<Finance> {
         Finance finance = new Finance();
         finance.setAmount(cents);
         finance.setFinanceType(FinanceType.TRANSFER);
-        finance.setDate(LocalDateTime.now());
+        finance.setDate(new Timestamp(new Date().getTime()));
         finance.setAgentEmail(agentEmail);
         finance.setName(description);
         persist(finance);

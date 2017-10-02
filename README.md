@@ -35,3 +35,16 @@ Username: userB2K
  
  
  client-taxisurfr.rhcloud.com
+ 
+ C:\taxisurfr\openshift
+ 
+ Generate a key and a csr
+ -----------------------
+ openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr
+ 
+ Upload csr to godaddy and download crt.
+ ---------------------------------------
+ 
+ Decrypt private key
+ -------------------
+ openssl rsa -in server.key -out dec.key

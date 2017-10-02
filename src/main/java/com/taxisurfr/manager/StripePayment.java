@@ -9,7 +9,8 @@ import com.taxisurfr.util.PdfUtil;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -59,7 +60,7 @@ public class StripePayment {
             finance.setType(FinanceType.PAYMENT);
             finance.setCurrency(Currency.USD);
             finance.setName(booking.getOrderRef());
-            finance.setDate(LocalDateTime.now());
+            finance.setDate(new Timestamp(new Date().getTime()));
             finance.setAgentEmail(agent.getEmail());
 
             int centsToPay = share ? booking.getRoute().getCentsToJoin() : booking.getRoute().getCents();
