@@ -396,7 +396,7 @@
             <buffer-cache name="default"/>
             <server name="default-server">
                 <http-listener name="default" socket-binding="http" redirect-socket="https"/>
-                <host name="default-host" alias="localhost" default-web-module="taxisurfr-1.war">
+                <host name="default-host" alias="localhost" default-web-module="taxisurfr.war">
                     <location name="/" handler="welcome-content"/>
                     <filter-ref name="server-header"/>
                     <filter-ref name="x-powered-by-header"/>
