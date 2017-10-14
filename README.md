@@ -45,6 +45,10 @@ Username: userB2K
  Upload csr to godaddy and download crt.
  ---------------------------------------
  
- Decrypt private key
- -------------------
- openssl rsa -in server.key -out dec.key
+ install simple cert and key in openshift
+ 
+ Setup default-host
+/subsystem=undertow/server=default-server/host=default-host:write-attribute(name=default-web-module,value=taxisurfr-1.war)
+
+See
+https://docs.jboss.org/author/display/WFLY/Command+Line+Interface
