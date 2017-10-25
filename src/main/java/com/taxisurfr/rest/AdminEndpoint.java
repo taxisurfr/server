@@ -149,6 +149,17 @@ public class AdminEndpoint {
         return getBookingModel(email);
     }
 
+    @POST
+    @Path("/routes")
+    @Authenicate
+    public RoutesModel routes(@Context SecurityContext sc) throws IllegalArgumentException {
+        logger.info("");
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+        email = peek(email);
+        RoutesModel routesModel = getRoutesModel(email);
+        return routesModel;
+    }
+
     private boolean isAdmin(String email){
         return  ADMIN.equals(email);
     }
@@ -157,10 +168,20 @@ public class AdminEndpoint {
         BookingModel bookingModel=null;
         boolean admin = isAdmin(email);
         if (email != null) {
-                Agent agent = !admin ? agentManager.getAgent(email) : null;
-                bookingModel = bookingManager.getBookings(agent,admin);
+            Agent agent = !admin ? agentManager.getAgent(email) : null;
+            bookingModel = bookingManager.getBookings(agent,admin);
         }
         return bookingModel;
+    }
+
+    private RoutesModel getRoutesModel(String email) {
+        RoutesModel routesModel=null;
+        boolean admin = isAdmin(email);
+        if (email != null) {
+            Agent agent = !admin ? agentManager.getAgent(email) : null;
+            routesModel = routeManager.getRoutes(agent, admin);
+        }
+        return routesModel;
     }
 
     @POST
@@ -180,6 +201,21 @@ public class AdminEndpoint {
         return getBookingModel(email);
     }
 
+    @POST
+    @Path("/editRoute")
+    @Consumes("application/json")
+    @Authenicate
+    public RoutesModel editRoute(@Context SecurityContext sc, EditRouteJS editBookingJS) throws
+            IllegalArgumentException {
+
+        FinanceModel financeModel = null;
+        logger.info("");
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+        if (email != null) {
+            routeManager.editRoute(editBookingJS.id,editBookingJS.cents);
+        }
+        return getRoutesModel(email);
+    }
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/routes")

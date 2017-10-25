@@ -2,11 +2,12 @@ package com.taxisurfr.domain;
 
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "Contractor.getByAgent", query = "SELECT s FROM Contractor s WHERE s.agentId = :agentId")
+})
 public class Contractor implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

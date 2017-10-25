@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table
 @NamedQueries({
         @NamedQuery(name = "Route.getAll", query = "SELECT s FROM Route s"),
+        @NamedQuery(name = "Route.getByContractor", query = "SELECT s FROM Route s WHERE s.contractorId = :contractorId "),
         @NamedQuery(name = "Route.getByQuery", query = "SELECT s FROM Route s WHERE s.startroute like  :query "),
         @NamedQuery(name = "Route.getByLink", query = "SELECT s FROM Route s WHERE s.link =  :link "),
         @NamedQuery(name = "Route.getByDescLink", query = "SELECT s FROM Route s WHERE s.description =  :link "),

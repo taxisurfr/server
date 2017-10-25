@@ -32,10 +32,15 @@ public class AgentManager extends AbstractDao<Agent> {
     }
 
     public Agent getAgent(String email) {
-        Agent agent = (Agent) getEntityManager().createNamedQuery("Agent.getByEmail")
-                .setParameter("email", email)
-                .getSingleResult();
-        return agent;
+        try {
+            Agent agent = (Agent) getEntityManager().createNamedQuery("Agent.getByEmail")
+                    .setParameter("email", email)
+                    .getSingleResult();
+            return agent;
+        }catch (Exception ex){
+            logger.severe("no agent for email:"+email);
+        }
+        return null;
     }
 
     public List<Agent> getAgents() {
