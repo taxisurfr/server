@@ -147,7 +147,7 @@ public class RouteManager extends AbstractDao<Route> {
             route.setCents(99900);
             startroute = startroute.replace(' ','-').toLowerCase();
             endroute = endroute.replace(' ','-').toLowerCase();
-            route.setDescription("taxi-"+startroute+'-'+endroute);
+            route.setDescription("/taxi-"+startroute+'-'+endroute);
             //fixme
             route.setContractorId(1L);
             persist(route);
