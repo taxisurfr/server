@@ -11,7 +11,8 @@ import javax.xml.bind.annotation.XmlRootElement;
         @NamedQuery(name = "Route.getByQuery", query = "SELECT s FROM Route s WHERE s.startroute like  :query "),
         @NamedQuery(name = "Route.getByLink", query = "SELECT s FROM Route s WHERE s.link =  :link "),
         @NamedQuery(name = "Route.getByDescLink", query = "SELECT s FROM Route s WHERE s.description =  :link "),
-        @NamedQuery(name = "Route.getByStartEnd", query = "SELECT s FROM Route s WHERE s.startroute =  :startroute AND s.endroute = :endroute ")
+        @NamedQuery(name = "Route.getByStartEnd", query = "SELECT s FROM Route s WHERE s.startroute =  :startroute AND s.endroute = :endroute "),
+        @NamedQuery(name = "Route.getByStart", query = "SELECT s FROM Route s WHERE s.startroute =  :startroute ")
 })
 @XmlRootElement
 public class Route implements java.io.Serializable {

@@ -141,7 +141,22 @@ public class RouteManager extends AbstractDao<Route> {
         boolean created = false;
         Route route = getRoute(startroute,endroute);
         if (route == null) {
+            List<Route>listRoutes = getEntityManager().createNamedQuery("Route.getByStart")
+                    .setParameter("startroute", startroute)
+                    .getResultList();
+
+            Comparator<Route> routeComparator = new Comparator<Route>(){
+
+                @Override
+                public int compare(Route o1, Route o2) {
+                    return o1.getId().compareTo(o2.getId());
+                }
+            };
+            Collections.sort(listRoutes, routeComparator);
+
             route = new Route();
+            route.setId(listRoutes.get(listRoutes.size()-1).getId()+1);
+
             route.setStartroute(startroute);
             route.setEndroute(endroute);
             route.setCents(99900);
