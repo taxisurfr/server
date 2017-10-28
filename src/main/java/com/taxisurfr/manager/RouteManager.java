@@ -26,6 +26,7 @@ public class RouteManager extends AbstractDao<Route> {
 
     private static final String[] LOCATIONS = {"Colombo Airport", "Colombo Downtown", "Arugam Bay",
             "Dambulla", "Galle", "Haputale", "Hikkaduwa", "Kalpitiya", "Kandy", "Kitulgala", "Polunnaruwa", "Mirissa",
+            "Mirissa - return",
             "Weligama", "Yala Tissamaharama", "Polunaruwa", "Bandarawella", "Ella", "Tangalle", "Akkaraipattu", "Nuwara Eliya",
             "Midigama", "Kalpitiya", "Batikallo", "Passikuda","Sigiriya", "Trinco", "Udawalawa", "Unawatuna"};
 
@@ -144,6 +145,9 @@ public class RouteManager extends AbstractDao<Route> {
             route.setStartroute(startroute);
             route.setEndroute(endroute);
             route.setCents(99900);
+            startroute = startroute.replace(' ','-').toLowerCase();
+            endroute = endroute.replace(' ','-').toLowerCase();
+            route.setDescription("taxi-"+startroute+'-'+endroute);
             //fixme
             route.setContractorId(1L);
             persist(route);
