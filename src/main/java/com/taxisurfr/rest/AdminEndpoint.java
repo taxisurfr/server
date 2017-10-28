@@ -140,6 +140,24 @@ public class AdminEndpoint {
 
 
     @POST
+    @Path("/createRoute")
+    @Authenicate
+    public RoutesModel createRoute(@Context SecurityContext sc, RouteJS routeJS) throws IllegalArgumentException {
+        logger.info("");
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+        boolean admin = isAdmin(email);
+        if (email != null) {
+            boolean created = routeManager.saveRoute(routeJS.startroute,routeJS.endroute);
+            RoutesModel routesModel = getRoutesModel(email);
+            routesModel.created = created;
+            return routesModel;
+        } else {
+            return null;
+        }
+    }
+
+
+    @POST
     @Path("/booking")
     @Authenicate
     public BookingModel booking(@Context SecurityContext sc) throws IllegalArgumentException {

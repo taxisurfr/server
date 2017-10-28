@@ -8,4 +8,6 @@ public class RoutesModel {
 
     public boolean admin;
     public List routesList;
+    public List locations;
+    public boolean created;
 }

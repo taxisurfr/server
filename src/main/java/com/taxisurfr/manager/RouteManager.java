@@ -7,10 +7,7 @@ import com.taxisurfr.domain.Route;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Stateless
@@ -27,6 +24,10 @@ public class RouteManager extends AbstractDao<Route> {
 
     }
 
+    private static final String[] LOCATIONS = {"Colombo Airport", "Colombo Downtown", "Arugam Bay",
+            "Dambulla", "Galle", "Haputale", "Hikkaduwa", "Kalpitiya", "Kandy", "Kitulgala", "Polunnaruwa", "Mirissa",
+            "Weligama", "Yala Tissamaharama", "Polunaruwa", "Bandarawella", "Ella", "Tangalle", "Akkaraipattu", "Nuwara Eliya",
+            "Midigama", "Kalpitiya", "Batikallo", "Passikuda","Sigiriya", "Trinco", "Udawalawa", "Unawatuna"};
 
     public void createLinkInDescription() {
         List<Route> routes = getEntityManager().createNamedQuery("Route.getAll").getResultList();
@@ -116,6 +117,16 @@ public class RouteManager extends AbstractDao<Route> {
             }
         };
         Collections.sort(routesModel.routesList, comparator);
+
+
+        routesModel.locations = new ArrayList();
+        for (String s: LOCATIONS){
+            ValueLabel valueLabel = new ValueLabel();
+            valueLabel.value = s;
+            valueLabel.label = s;
+
+            routesModel.locations.add(valueLabel);
+        }
         return routesModel;
     }
 
@@ -123,5 +134,23 @@ public class RouteManager extends AbstractDao<Route> {
         Route route = find(id);
         route.setCents(cents);
         persist(route);
+    }
+
+    public boolean saveRoute(String startroute, String endroute) {
+        boolean created = false;
+        Route route = getRoute(startroute,endroute);
+        if (route == null) {
+            route = new Route();
+            route.setStartroute(startroute);
+            route.setEndroute(endroute);
+            route.setCents(99900);
+            //fixme
+            route.setContractorId(1L);
+            persist(route);
+            created = true;
+        }else{
+            logger.warning("did not create : already exists");
+        }
+        return created;
     }
 }
