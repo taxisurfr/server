@@ -47,6 +47,8 @@ Username: userB2K
  
  install simple cert and key in openshift
  
+ cat a97a53706f480a26.crt gd_bundle-g2-g1.crt  > combined.pem
+ 
  Setup default-host
 /subsystem=undertow/server=default-server/host=default-host:write-attribute(name=default-web-module,value=taxisurfr-1.war)
 

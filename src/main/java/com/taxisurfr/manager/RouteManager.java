@@ -27,7 +27,7 @@ public class RouteManager extends AbstractDao<Route> {
     private static final String[] LOCATIONS = {"Colombo Airport", "Colombo Downtown", "Arugam Bay",
             "Dambulla", "Galle", "Haputale", "Hikkaduwa", "Kalpitiya", "Kandy", "Kitulgala", "Polunnaruwa", "Mirissa",
             "Mirissa - return",
-            "Weligama", "Yala Tissamaharama", "Polunaruwa", "Bandarawella", "Ella", "Tangalle", "Akkaraipattu", "Nuwara Eliya",
+            "Weligama", "Weligama - return","Yala Tissamaharama", "Polunaruwa", "Bandarawella", "Ella", "Tangalle", "Akkaraipattu", "Nuwara Eliya",
             "Midigama", "Kalpitiya", "Batikallo", "Passikuda","Sigiriya", "Trinco", "Udawalawa", "Unawatuna"};
 
     public void createLinkInDescription() {
