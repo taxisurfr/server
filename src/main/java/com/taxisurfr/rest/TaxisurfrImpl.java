@@ -167,7 +167,7 @@ public class TaxisurfrImpl {
 
 
     @POST
-    @Path("/contact")
+    @Path("/createcontact")
     public Boolean createContactMessage(ContactMessageJS contact) throws IllegalArgumentException {
         mailer.sendContactMessage(contact.contactname, contact.contactemail, contact.contactmessage, profileManager.getProfile());
         return true;
