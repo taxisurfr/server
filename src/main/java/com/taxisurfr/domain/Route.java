@@ -45,8 +45,6 @@ public class Route implements java.io.Serializable {
     @Column
     private PickupType pickupType = PickupType.AIRPORT;
     @Column
-    private int cents;
-    @Column
     private int centsToJoin;
     @Column
     private Currency agentCurrency = Currency.USD;
@@ -85,14 +83,6 @@ public class Route implements java.io.Serializable {
 
     public void setEndroute(String endroute) {
         this.endroute = endroute;
-    }
-
-    public int getCents() {
-        return cents;
-    }
-
-    public void setCents(int cents) {
-        this.cents = cents;
     }
 
     public String getDescription() {
@@ -134,4 +124,5 @@ public class Route implements java.io.Serializable {
     public void setPartnerId(Long partnerId) {
         this.partnerId = partnerId;
     }
+
 }

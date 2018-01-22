@@ -31,6 +31,9 @@ public class TaxisurfrImpl {
     private BookingManager bookingManager;
 
     @Inject
+    private PricesManager pricesManager;
+
+    @Inject
     RouteManager routeManager;
     @Inject
     AgentManager agentManager;
@@ -60,25 +63,6 @@ public class TaxisurfrImpl {
         statManager.sendDaily(profileManager.getProfile());
     }
 
-    /*@POST
-    @Path("/session.get")
-    public NewSessionResultJS addSession(NewSessionJS session) throws IllegalArgumentException {
-        logger.info("session.new" + session.start + " to " + session.end);
-        logger.info("session.new" + session.start + " to " + session.end);
-        String link = getLink(session.url)[0];
-        String country = getLink(session.url)[1];
-        session.link = link;
-        session.country = country;
-        SessionStat sessionStat = statManager.addSession(session);
-
-        NewSessionResultJS newSessionResultJS = new NewSessionResultJS();
-        newSessionResultJS.stripePublishable = profileManager.getProfile().getStripePublishable();
-
-        newSessionResultJS.route = routeManager.getRouteFromLink(link);
-
-        return newSessionResultJS;
-    }
-*/
     @POST
     @Path("/session")
     public NewSessionResultJS newSession(SessionJS session) throws IllegalArgumentException {
@@ -111,6 +95,7 @@ public class TaxisurfrImpl {
     public RouteAndSharingsJS getRouteFromLink(Query query) throws IllegalArgumentException {
         RouteAndSharingsJS routeAndSharingsJS = new RouteAndSharingsJS();
         routeAndSharingsJS.route = routeManager.getRouteFromLink(query.link);
+        routeAndSharingsJS.prices = pricesManager.getPrices(routeAndSharingsJS.route);
         routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(routeAndSharingsJS.route);
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
         routeAndSharingsJS.showNoRouteMessage=false;
@@ -132,6 +117,7 @@ public class TaxisurfrImpl {
         logger.info("pickup:" + query.pickup + "dropoff:" + query.dropoff);
         RouteAndSharingsJS routeAndSharingsJS = new RouteAndSharingsJS();
         routeAndSharingsJS.route = routeManager.getRoute(query.pickup, query.dropoff);
+        routeAndSharingsJS.prices = pricesManager.getPrices(routeAndSharingsJS.route);
         routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(routeAndSharingsJS.route);
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
         routeAndSharingsJS.showNoRouteMessage=true;
@@ -190,6 +176,7 @@ public class TaxisurfrImpl {
     public RouteAndSharingsJS getResortSharings(@Context HttpHeaders headers, RouteLinkJS routeLinkJS) throws IllegalArgumentException {
         RouteAndSharingsJS routeAndSharingsJS = new RouteAndSharingsJS();
         routeAndSharingsJS.route = routeManager.getRouteFromLink(routeLinkJS.link);
+        routeAndSharingsJS.prices = pricesManager.getPrices(routeAndSharingsJS.route);
         routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(routeAndSharingsJS.route);
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
         logger.info("route:" + routeAndSharingsJS.route);
@@ -230,8 +217,9 @@ public class TaxisurfrImpl {
         Route route = routeManager.find(booking.routeId);
         Contractor contractor = contractorManager.find(route.getContractorId());
         Agent agent = agentManager.find(contractor.getAgentId());
+        Price price = pricesManager.find(booking.priceId);
         createSessionStat(headers, "", "newbooking:" + route.startroute + "_" + route.endroute);
-        return bookingManager.createBooking(booking, agent, contractor);
+        return bookingManager.createBooking(booking, price,agent, contractor);
     }
 
     @POST

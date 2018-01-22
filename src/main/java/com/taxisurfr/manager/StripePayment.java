@@ -63,17 +63,17 @@ public class StripePayment {
             finance.setDate(new Timestamp(new Date().getTime()));
             finance.setAgentEmail(agent.getEmail());
 
-            int centsToPay = share ? booking.getRoute().getCentsToJoin() : booking.getRoute().getCents();
+            long centsToPay = share ? booking.getRoute().getCentsToJoin() : booking.getPrice().getCents();
             if (booking.getRoute().getPickupType()==PickupType.SHUTTLE_AIRPORT || booking.getRoute().getPickupType()==PickupType.SHUTTLE_HOTEL){
-                centsToPay = booking.getRoute().getCents() * booking.getPax();
+                centsToPay = booking.getPrice().getCents() * booking.getPax();
             }
 
-            finance.setAmount(centsToPay);
+            finance.setAmount((int)centsToPay);
             finance.setBookingId(booking.getId());
 
-            error = charge(token, booking, booking.getRoute(), finance, centsToPay);
+            error = charge(token, booking, booking.getRoute(), finance, (int)centsToPay);
             if (error==null) {
-                booking.setPaidPrice((centsToPay));
+                booking.setPaidPrice((int)centsToPay);
                 booking.setRef(agent.getOrderCount() + "_" + booking.getName());
                 byte[] pdfData = new PdfUtil()
                         .generateTaxiOrder("template/order_with_feedback.pdf", booking, booking.getRoute(), agent, contractor);

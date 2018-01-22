@@ -17,4 +17,5 @@ public class NewBookingJS {
     public String requirements;
     public Boolean shareWanted;
     public Boolean announceShare;
+    public Long priceId;
 }

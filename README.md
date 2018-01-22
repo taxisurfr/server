@@ -54,3 +54,20 @@ Username: userB2K
 
 See
 https://docs.jboss.org/author/display/WFLY/Command+Line+Interface
+
+-----------------------------------
+db backup
+cd c:\dev\taxisurfr\db_dump
+oc rsh postgresql-2-96tww
+pg_dump taxisurfr | gzip > tmp/taxisurfr.gz
+exit
+oc rsync postgresql-2-96tww:/tmp/taxisurfr.dump .
+
+-----------------------------------
+createdb -U postgres -T template0 taxisurfrtest
+psql -U postgres taxisurfrtest < taxisurfr.dump
+psql -U postgres -d taxisurfrtest
+show client_encoding;
+SET client_encoding = 'UTF8';
+
+psql -U postgres -d taxisurfrtest -a -f ..\server\src\main\resources\scripts\prices.sql 

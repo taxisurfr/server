@@ -1,0 +1,11 @@
+DROP table price;
+DROP table finance;
+DROP table booking;
+DROP table contractor;
+DROP table route;
+DROP table agent;
+DROP table ip2nation;
+DROP table ip2nationcountries;
+DROP table partner;
+DROP table sessionstat;
+DROP table taxisurfruser;

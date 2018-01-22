@@ -1,8 +1,6 @@
 package com.taxisurfr.rest;
 
-import com.taxisurfr.domain.Agent;
-import com.taxisurfr.domain.Route;
-import com.taxisurfr.domain.SessionStat;
+import com.taxisurfr.domain.*;
 import com.taxisurfr.manager.*;
 import com.taxisurfr.rest.js.*;
 import com.taxisurfr.util.Mailer;
@@ -36,6 +34,9 @@ public class AdminEndpoint {
 
     @Inject
     ContractorManager contractorManager;
+
+    @Inject
+    PricesManager pricesManager;
 
     @Inject
     StatManager statManager;
@@ -99,26 +100,30 @@ public class AdminEndpoint {
     }
 
     @POST
+    @Path("/logindetails")
+    @Authenicate
+    public LoginDetailsJS loginDetails(@Context SecurityContext sc) throws IllegalArgumentException {
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+        LoginDetailsJS loginDetailsJS = new LoginDetailsJS();
+        boolean admin = isAdmin(email);
+        loginDetailsJS.loginName = admin ? "ADMIN" : contractorManager.getByEmail(email).getName();
+        loginDetailsJS.admin = admin;
+        return loginDetailsJS;
+    }
+
+    @POST
     @Path("/finance")
     @Authenicate
     public FinanceModel finance(@Context SecurityContext sc) throws IllegalArgumentException {
         logger.info("");
         String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
-        email = peek(email);
         boolean admin = isAdmin(email);
         if (email != null) {
-            FinanceModel financeModel =financeManager.getFinances(email,admin);
+            FinanceModel financeModel = financeManager.getFinances(email, admin);
             return financeModel;
         } else {
             return null;
         }
-    }
-
-    private String peek(String contractorEmail){
-        if ("taxisurfrcontractor@gmail.com".equals(contractorEmail)){
-            return "newsanjumobile@gmail.com";
-        }
-        return contractorEmail;
     }
 
     @POST
@@ -130,8 +135,8 @@ public class AdminEndpoint {
         boolean admin = isAdmin(email);
         if (email != null) {
             Agent agent = agentManager.find(transferJS.agentId);
-            financeManager.saveTransfer(agent.getEmail(),admin,transferJS.cents,transferJS.description);
-            FinanceModel financeModel =financeManager.getFinances(email,admin);
+            financeManager.saveTransfer(agent.getEmail(), admin, transferJS.cents, transferJS.description);
+            FinanceModel financeModel = financeManager.getFinances(email, admin);
             return financeModel;
         } else {
             return null;
@@ -147,9 +152,26 @@ public class AdminEndpoint {
         String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
         boolean admin = isAdmin(email);
         if (email != null) {
-            boolean created = routeManager.saveRoute(routeJS.startroute,routeJS.endroute);
+            boolean created = routeManager.saveRoute(routeJS.startroute, routeJS.endroute);
             RoutesModel routesModel = getRoutesModel(email);
             routesModel.created = created;
+            return routesModel;
+        } else {
+            return null;
+        }
+    }
+
+    @POST
+    @Path("/createStartRoute")
+    @Authenicate
+    public RoutesModel createStartRoute(@Context SecurityContext sc, RouteJS routeJS) throws IllegalArgumentException {
+        logger.info("");
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+        boolean admin = isAdmin(email);
+        if (email != null) {
+            routeManager.saveStartRoute(routeJS.id, routeJS.startroute);
+            RoutesModel routesModel = getRoutesModel(email);
+            routesModel.created = true;
             return routesModel;
         } else {
             return null;
@@ -163,7 +185,6 @@ public class AdminEndpoint {
     public BookingModel booking(@Context SecurityContext sc) throws IllegalArgumentException {
         logger.info("");
         String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
-        email = peek(email);
         return getBookingModel(email);
     }
 
@@ -173,34 +194,116 @@ public class AdminEndpoint {
     public RoutesModel routes(@Context SecurityContext sc) throws IllegalArgumentException {
         logger.info("");
         String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
-        email = peek(email);
         RoutesModel routesModel = getRoutesModel(email);
         return routesModel;
     }
 
-    private boolean isAdmin(String email){
-        return  ADMIN.equals(email);
+    @POST
+    @Path("/contractors")
+    @Authenicate
+    public ContractorsModel contractors(@Context SecurityContext sc) throws IllegalArgumentException {
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+        ContractorsModel contractorsModel = getContractorsModel(isAdmin(email));
+        return contractorsModel;
+    }
+
+    public ContractorsModel getContractorsModel(boolean admin) {
+
+        ContractorsModel contractorsModel = new ContractorsModel();
+        contractorsModel.admin = admin;
+
+        contractorsModel.contractorsList = contractorManager.getContractorList(admin);
+        return contractorsModel;
+    }
+
+    @POST
+    @Path("/prices")
+    @Authenicate
+    public PricesModel prices(@Context SecurityContext sc) throws IllegalArgumentException {
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+
+        return getPriceModel(email);
+    }
+
+    private PricesModel getPriceModel(String email) {
+        PricesModel pricesModel = new PricesModel();
+        pricesModel.admin = isAdmin(email);
+        pricesModel.prices = pricesManager.getPrices(email, pricesModel.admin);
+
+        Agent agent = !pricesModel.admin ? agentManager.getAgent(email) : null;
+
+        pricesModel.routes = routeManager.getRoutes(agent, pricesModel.admin);
+        pricesModel.locations = routeManager.getLocations((List<Route>) pricesModel.routes);
+        return pricesModel;
+    }
+
+    @POST
+    @Path("/updatecreateprice")
+    @Authenicate
+    public PricesModel updatecreateprice(@Context SecurityContext sc, PriceJS priceJS) throws IllegalArgumentException {
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+        PricesModel pricesModel = new PricesModel();
+        pricesModel.admin = isAdmin(email);
+
+        Route route = null;
+        Contractor contractor = priceJS.contractorId == null ?
+                contractorManager.getContractorById(1L) :
+                contractorManager.getContractorById(priceJS.contractorId);
+        if (priceJS.id != null) {
+            Price price = pricesManager.getById(priceJS.id );
+            price.setCents(priceJS.cents);
+            pricesManager.persist(price);
+
+        } else {
+
+            route = routeManager.getRoute(priceJS.startroute, priceJS.endroute);
+
+            Price price = new Price();
+            price.setRoute(route);
+            price.setContractor(contractor);
+            price.setCents(priceJS.cents);
+
+            pricesManager.updateOrCreatePrice(price);
+        }
+        return getPriceModel(email);
+    }
+
+
+    @POST
+    @Path("/updatecreatecontractor")
+    @Authenicate
+    public ContractorsModel updatecreatecontractor(@Context SecurityContext sc, ContractorJS contractorJS) throws IllegalArgumentException {
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+
+        Contractor contractor = new Contractor();
+        contractor.setId(contractorJS.id);
+        contractor.setAddress1(contractorJS.address1);
+        contractor.setAddress2(contractorJS.address2);
+        contractor.setAddress3(contractorJS.address3);
+        contractor.setAddress4(contractorJS.address4);
+        contractor.setName(contractorJS.name);
+        contractor.setEmail(contractorJS.email);
+
+        contractorManager.updateOrCreateContractor(contractor);
+        ContractorsModel contractorsModel = getContractorsModel(isAdmin(email));
+        return contractorsModel;
+    }
+
+
+    private boolean isAdmin(String email) {
+        return ADMIN.equals(email);
     }
 
     private BookingModel getBookingModel(String email) {
-        BookingModel bookingModel=null;
+        BookingModel bookingModel = null;
         boolean admin = isAdmin(email);
         if (email != null) {
             Agent agent = !admin ? agentManager.getAgent(email) : null;
-            bookingModel = bookingManager.getBookings(agent,admin);
+            bookingModel = bookingManager.getBookings(agent, admin);
         }
         return bookingModel;
     }
 
-    private RoutesModel getRoutesModel(String email) {
-        RoutesModel routesModel=null;
-        boolean admin = isAdmin(email);
-        if (email != null) {
-            Agent agent = !admin ? agentManager.getAgent(email) : null;
-            routesModel = routeManager.getRoutes(agent, admin);
-        }
-        return routesModel;
-    }
 
     @POST
     @Path("/cancelBooking")
@@ -213,13 +316,13 @@ public class AdminEndpoint {
         logger.info("");
         String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
         if (email != null) {
-            financeModel = financeManager.cancelBooking(email, cancelBookingJS.bookingId,isAdmin(email));
+            financeModel = financeManager.cancelBooking(email, cancelBookingJS.bookingId, isAdmin(email));
             bookingManager.cancelBooking(cancelBookingJS.bookingId);
         }
         return getBookingModel(email);
     }
 
-    @POST
+ /*   @POST
     @Path("/editRoute")
     @Consumes("application/json")
     @Authenicate
@@ -230,10 +333,25 @@ public class AdminEndpoint {
         logger.info("");
         String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
         if (email != null) {
-            routeManager.editRoute(editBookingJS.id,editBookingJS.cents);
+            routeManager.editRoute(editBookingJS.id, editBookingJS.cents);
         }
+
+
         return getRoutesModel(email);
     }
+*/
+    private RoutesModel getRoutesModel(String email) {
+        RoutesModel routesModel = new RoutesModel();
+        routesModel.admin = isAdmin(email);
+        if (email != null) {
+            Agent agent = !routesModel.admin ? agentManager.getAgent(email) : null;
+            routesModel.routesList = routeManager.getRoutes(agent, routesModel.admin);
+            routesModel.locations = routeManager.getLocations(routesModel.routesList);
+        }
+        routesModel.contractors = contractorManager.getContractorIdList(routesModel.admin);
+        return routesModel;
+    }
+
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("/routes")

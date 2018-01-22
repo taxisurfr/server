@@ -63,6 +63,18 @@ import java.util.Date;
     @Column private int paidPrice;
     @Column private int sharePrice;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @MapsId
+    private Price price;
+
+    public Price getPrice() {
+        return price;
+    }
+
+    public void setPrice(Price price) {
+        this.price = price;
+    }
+
     public long getId() {
         return id;
     }
@@ -86,8 +98,7 @@ import java.util.Date;
         return route;
     }
 
-    public void setRoute(Route route)
-    {
+    public void setRoute(Route route) {
         this.route = route;
     }
 

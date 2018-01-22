@@ -15,6 +15,8 @@ public class RouteManager extends AbstractDao<Route> {
 
     @Inject
     Logger logger;
+    @Inject
+    PricesManager pricesManager;
 
     private static List<Route> routeInfoCache;
 
@@ -24,11 +26,13 @@ public class RouteManager extends AbstractDao<Route> {
 
     }
 
+/*
     private static final String[] LOCATIONS = {"Colombo Airport", "Colombo Downtown", "Arugam Bay",
             "Dambulla", "Galle", "Haputale", "Hikkaduwa", "Kalpitiya", "Kandy", "Kitulgala", "Polunnaruwa", "Mirissa",
             "Mirissa - return",
             "Weligama", "Weligama - return","Yala Tissamaharama", "Polunaruwa", "Bandarawella", "Ella", "Tangalle", "Akkaraipattu", "Nuwara Eliya",
             "Midigama", "Kalpitiya", "Batikallo", "Passikuda","Sigiriya", "Trinco", "Udawalawa", "Unawatuna"};
+*/
 
     public void createLinkInDescription() {
         List<Route> routes = getEntityManager().createNamedQuery("Route.getAll").getResultList();
@@ -84,22 +88,19 @@ public class RouteManager extends AbstractDao<Route> {
         return findAll();
     }
 
-    public RoutesModel getRoutes(Agent agent, boolean admin) {
-        RoutesModel routesModel = new RoutesModel();
-        routesModel.admin = admin;
+    public List<Route> getRoutes(Agent agent, boolean admin) {
+        List<Route> routesList = new ArrayList<>();
         try {
-
             if (admin) {
-                routesModel.routesList = getEntityManager().createNamedQuery("Route.getAll")
+                routesList = getEntityManager().createNamedQuery("Route.getAll")
                         .getResultList();
             } else {
-                routesModel.routesList = new ArrayList<>();
                 if (agent != null) {
                     List<Contractor> listContractor = getEntityManager().createNamedQuery("Contractor.getByAgent")
                             .setParameter("agentId", agent.getId())
                             .getResultList();
                     for (Contractor contractor : listContractor) {
-                        routesModel.routesList.addAll(
+                        routesList.addAll(
                                 getEntityManager().createNamedQuery("Route.getByContractor")
                                         .setParameter("contractorId", contractor.getId())
                                         .getResultList()
@@ -110,42 +111,45 @@ public class RouteManager extends AbstractDao<Route> {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        Comparator<Route> comparator = new Comparator<Route>(){
+        Comparator<Route> comparator = new Comparator<Route>() {
 
             @Override
             public int compare(Route o1, Route o2) {
+                if (o1.getStartroute() == null) {
+                    System.out.println();
+                }
                 return o1.getStartroute().compareTo(o2.getStartroute());
             }
         };
-        Collections.sort(routesModel.routesList, comparator);
+        Collections.sort(routesList, comparator);
 
 
-        routesModel.locations = new ArrayList();
-        for (String s: LOCATIONS){
-            ValueLabel valueLabel = new ValueLabel();
-            valueLabel.value = s;
-            valueLabel.label = s;
-
-            routesModel.locations.add(valueLabel);
-        }
-        return routesModel;
+        return routesList;
     }
 
-    public void editRoute(Long id, int cents) {
-        Route route = find(id);
-        route.setCents(cents);
-        persist(route);
+    public List<ValueLabel> getLocations(List<Route> routesList) {
+        List<ValueLabel> locations = new ArrayList();
+        Map<String, ValueLabel> labels = new HashMap<>();
+        for (Object r : routesList) {
+            Route route = (Route) r;
+            ValueLabel valueLabel = new ValueLabel();
+            valueLabel.value = route.startroute;
+            valueLabel.label = route.startroute;
+            labels.put(route.startroute, valueLabel);
+        }
+        locations.addAll(labels.values());
+        return locations;
     }
 
     public boolean saveRoute(String startroute, String endroute) {
         boolean created = false;
-        Route route = getRoute(startroute,endroute);
+        Route route = getRoute(startroute, endroute);
         if (route == null) {
-            List<Route>listRoutes = getEntityManager().createNamedQuery("Route.getByStart")
+            List<Route> listRoutes = getEntityManager().createNamedQuery("Route.getByStart")
                     .setParameter("startroute", startroute)
                     .getResultList();
 
-            Comparator<Route> routeComparator = new Comparator<Route>(){
+            Comparator<Route> routeComparator = new Comparator<Route>() {
 
                 @Override
                 public int compare(Route o1, Route o2) {
@@ -155,21 +159,43 @@ public class RouteManager extends AbstractDao<Route> {
             Collections.sort(listRoutes, routeComparator);
 
             route = new Route();
-            route.setId(listRoutes.get(listRoutes.size()-1).getId()+1);
+            route.setId(listRoutes.get(listRoutes.size() - 1).getId() + 1);
 
             route.setStartroute(startroute);
             route.setEndroute(endroute);
-            route.setCents(99900);
-            startroute = startroute.replace(' ','-').toLowerCase();
-            endroute = endroute.replace(' ','-').toLowerCase();
-            route.setDescription("/taxi-"+startroute+'-'+endroute);
+            setDescription(route);
             //fixme
             route.setContractorId(1L);
             persist(route);
             created = true;
-        }else{
+        } else {
             logger.warning("did not create : already exists");
         }
         return created;
+    }
+
+    public void saveStartRoute(Long id, String startroute) {
+
+        Route route = new Route();
+        route.setId(id);
+        route.setStartroute(startroute);
+        route.setEndroute("Arugam Bay");
+        route.setContractorId(1L);
+        route.setPickupType(PickupType.HOTEL);
+        setDescription(route);
+
+        persist(route);
+    }
+
+    private void setDescription(Route route) {
+        String startroute = route.getStartroute();
+        String endroute = route.getEndroute();
+        startroute = startroute.replace(' ', '-').toLowerCase();
+        endroute = endroute.replace(' ', '-').toLowerCase();
+        route.setDescription("/taxi-" + startroute + '-' + endroute);
+    }
+
+    public Route getRouteById(Long routeId) {
+        return  find(routeId);
     }
 }

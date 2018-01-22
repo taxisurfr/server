@@ -1,5 +1,6 @@
 package com.taxisurfr.rest.js;
 
+import com.taxisurfr.domain.Price;
 import com.taxisurfr.domain.Route;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,6 +19,7 @@ public class RouteAndSharingsJS {
         public int orderType;
     }
 
+    public List<Price> prices;
     public Route route;
     public List<Share> sharingList;
     public String stripeKey;

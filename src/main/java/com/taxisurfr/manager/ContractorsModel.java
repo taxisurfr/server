@@ -4,11 +4,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement
-public class RoutesModel {
+public class ContractorsModel {
 
     public boolean admin;
-    public List routesList;
-    public List locations;
-    public List contractors;
-    public boolean created;
+    public List contractorsList;
 }

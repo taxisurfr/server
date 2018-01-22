@@ -42,11 +42,12 @@ public class BookingManager extends AbstractDao<Booking> {
     @Inject
     private SendGridSender sender;
 
-    public Booking createBooking(NewBookingJS newBooking, Agent agent, Contractor contractor) {
+    public Booking createBooking(NewBookingJS newBooking, Price price, Agent agent, Contractor contractor) {
         OrderType orderType = newBooking.announceShare ? OrderType.SHARE_ANNOUNCEMENT : OrderType.BOOKING;
         Booking booking = new Booking();
         Route route = routeManager.find(newBooking.routeId);
         booking.setRoute(route);
+        booking.setPrice(price);
         booking.setAgent(agent.getId());
         booking.setContractor(contractor.getId());
         booking.setDate(new Timestamp(newBooking.date.getTime()));
