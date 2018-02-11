@@ -45,7 +45,7 @@ public class BookingManager extends AbstractDao<Booking> {
     public Booking createBooking(NewBookingJS newBooking, Price price, Agent agent, Contractor contractor) {
         OrderType orderType = newBooking.announceShare ? OrderType.SHARE_ANNOUNCEMENT : OrderType.BOOKING;
         Booking booking = new Booking();
-        Route route = routeManager.find(newBooking.routeId);
+        Route route = routeManager.find(newBooking.price.getRoute().getId());
         booking.setRoute(route);
         booking.setPrice(price);
         booking.setAgent(agent.getId());

@@ -1,11 +1,13 @@
 package com.taxisurfr.rest.js;
 
+import com.taxisurfr.domain.Price;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @XmlRootElement
 public class NewBookingJS {
-    public Long routeId;
+    public Price price;
     public String name;
     public Date date;
     public String email;
@@ -17,5 +19,4 @@ public class NewBookingJS {
     public String requirements;
     public Boolean shareWanted;
     public Boolean announceShare;
-    public Long priceId;
 }
