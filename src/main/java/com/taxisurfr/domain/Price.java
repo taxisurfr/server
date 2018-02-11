@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @NamedQueries({
         @NamedQuery(name = "Price.getAll", query = "SELECT s FROM Price s" ),
+        @NamedQuery(name = "Price.getByContractorAndRoute", query = "SELECT s FROM Price s WHERE s.contractor = :contractor and s.route = :route" ),
         @NamedQuery(name = "Price.getByContractor", query = "SELECT s FROM Price s WHERE s.contractor = :contractor" ),
         @NamedQuery(name = "Price.getByRoute", query = "SELECT s FROM Price s WHERE s.route = :route" )
 })
@@ -15,17 +16,13 @@ public class Price implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @SequenceGenerator(name = "idGeneratorSeq", sequenceName = "idSequence")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "idGeneratorSeq")
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @MapsId
     private Contractor contractor;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @MapsId
     private Route route;
 
     @Column

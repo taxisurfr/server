@@ -98,7 +98,7 @@ public class TaxisurfrImpl {
         routeAndSharingsJS.prices = pricesManager.getPrices(routeAndSharingsJS.route);
         routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(routeAndSharingsJS.route);
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
-        routeAndSharingsJS.showNoRouteMessage=false;
+        routeAndSharingsJS.showNoRouteMessage = false;
         return routeAndSharingsJS;
     }
 
@@ -120,7 +120,7 @@ public class TaxisurfrImpl {
         routeAndSharingsJS.prices = pricesManager.getPrices(routeAndSharingsJS.route);
         routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(routeAndSharingsJS.route);
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
-        routeAndSharingsJS.showNoRouteMessage=true;
+        routeAndSharingsJS.showNoRouteMessage = true;
 
         logger.info("route:" + routeAndSharingsJS.route);
         if (routeAndSharingsJS.route == null) {
@@ -219,7 +219,7 @@ public class TaxisurfrImpl {
         Agent agent = agentManager.find(contractor.getAgentId());
         Price price = pricesManager.find(booking.priceId);
         createSessionStat(headers, "", "newbooking:" + route.startroute + "_" + route.endroute);
-        return bookingManager.createBooking(booking, price,agent, contractor);
+        return bookingManager.createBooking(booking, price, agent, contractor);
     }
 
     @POST
@@ -305,8 +305,8 @@ public class TaxisurfrImpl {
         try {
             WebSitemapGenerator wsg = new WebSitemapGenerator("https://taxisurfr.com", new File("."));
             for (Route route : routeManager.getRoutes()) {
-                if (route.getPickupType()==PickupType.AIRPORT || route.getPickupType()==PickupType.HOTEL)
-                wsg.addUrl("https://taxisurfr.com" + route.getDescription());
+                if (route.getPickupType() == PickupType.AIRPORT || route.getPickupType() == PickupType.HOTEL)
+                    wsg.addUrl("https://taxisurfr.com" + route.getDescription());
             }
             File sitemap = wsg.write().get(0);
             BufferedReader br = new BufferedReader(new FileReader(sitemap));

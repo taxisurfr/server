@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class PriceJS {
-    public Long id;
+    public boolean newPrice;
     public String startroute;
     public String endroute;
     public Long cents;

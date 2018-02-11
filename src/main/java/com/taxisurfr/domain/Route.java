@@ -40,9 +40,6 @@ public class Route implements java.io.Serializable {
 
 
     @Column
-    private Long partnerId;
-
-    @Column
     private PickupType pickupType = PickupType.AIRPORT;
     @Column
     private int centsToJoin;
@@ -51,14 +48,15 @@ public class Route implements java.io.Serializable {
     private Long agentCents;
     private Long image;
 
-    private boolean inactive;
     private Long associatedRoute = NO_ASSOCIATED;
     @Column
     private String link;
 
 
+
     @Id
-    @Column
+    @SequenceGenerator(name = "idGeneratorSeq", sequenceName = "idSequence")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "idGeneratorSeq")
     private long id;
 
     public Long getId() {
@@ -108,21 +106,4 @@ public class Route implements java.io.Serializable {
     public void setLink(String link) {
         this.link = link;
     }
-
-    public int getCentsToJoin() {
-        return centsToJoin;
-    }
-
-    public void setCentsToJoin(int centsToJoin) {
-        this.centsToJoin = centsToJoin;
-    }
-
-    public Long getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(Long partnerId) {
-        this.partnerId = partnerId;
-    }
-
 }

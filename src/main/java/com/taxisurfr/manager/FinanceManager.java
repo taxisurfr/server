@@ -166,11 +166,11 @@ public class FinanceManager extends AbstractDao<Finance> {
     }
 
     public String payment(String token, Booking booking, boolean share) {
-        String error = stripePayment.payment(token, booking, share);
+        String error = stripePayment.payment(token, booking,share);
         if (error != null) {
             return error;
         }
-        if (booking.getOrderType().equals(OrderType.SHARE_REQUEST) && booking.getStatus().equals(BookingStatus.PAID)) {
+       /* if (booking.getOrderType().equals(OrderType.SHARE_REQUEST) && booking.getStatus().equals(BookingStatus.PAID)) {
             Booking booker = booking.getBooker();
             Route route = booker.getRoute();
             //TODO refund everything?
@@ -182,7 +182,7 @@ public class FinanceManager extends AbstractDao<Finance> {
                 booking.setStatus(BookingStatus.SHARE_PAID);
                 bookingManager.persist(booking);
             }
-        }
+        }*/
         return error;
 
     }

@@ -63,7 +63,7 @@ public class StripePayment {
             finance.setDate(new Timestamp(new Date().getTime()));
             finance.setAgentEmail(agent.getEmail());
 
-            long centsToPay = share ? booking.getRoute().getCentsToJoin() : booking.getPrice().getCents();
+            long centsToPay = booking.getPrice().getCents();
             if (booking.getRoute().getPickupType()==PickupType.SHUTTLE_AIRPORT || booking.getRoute().getPickupType()==PickupType.SHUTTLE_HOTEL){
                 centsToPay = booking.getPrice().getCents() * booking.getPax();
             }

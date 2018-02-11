@@ -58,15 +58,16 @@ https://docs.jboss.org/author/display/WFLY/Command+Line+Interface
 -----------------------------------
 db backup
 cd c:\dev\taxisurfr\db_dump
-oc rsh postgresql-2-96tww
+oc rsh postgresql-3-lb9vd
 pg_dump taxisurfr | gzip > tmp/taxisurfr.gz
 exit
 oc rsync postgresql-2-96tww:/tmp/taxisurfr.dump .
 
 -----------------------------------
-createdb -U postgres -T template0 taxisurfrtest
-psql -U postgres taxisurfrtest < taxisurfr.dump
-psql -U postgres -d taxisurfrtest
+psql>DROP DATABASE taxisurfr 
+createdb -U postgres -T template0 taxisurfr
+psql -U postgres taxisurfr < taxisurfr.dump
+psql -U postgres -d taxisurfr
 show client_encoding;
 SET client_encoding = 'UTF8';
 

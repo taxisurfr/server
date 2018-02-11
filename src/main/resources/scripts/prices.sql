@@ -1,9 +1,10 @@
 -- auto-generated definition
+
 CREATE TABLE price
 (
-  id      BIGINT NOT NULL
-          CONSTRAINT price_pkey
-          PRIMARY KEY,
+  id            BIGINT NOT NULL
+    CONSTRAINT price_pkey
+    PRIMARY KEY,
   cents         BIGINT,
   route_id      BIGINT NOT NULL
     CONSTRAINT fk_price_route_id
@@ -15,7 +16,7 @@ CREATE TABLE price
 
 INSERT INTO price (id,route_id, cents, contractor_id) SELECT id, id, cents, 1 FROM route;
 
-alter table route drop column cents;
+-- alter table route drop column cents;
 -- auto-generated definition
 drop TABLE booking;
 CREATE TABLE booking

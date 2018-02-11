@@ -1,6 +1,7 @@
 package com.taxisurfr.util;
 
 import com.taxisurfr.domain.*;
+import com.taxisurfr.manager.ProfileManager;
 import com.taxisurfr.rest.js.PickupDropoff;
 
 import javax.ejb.Stateless;
@@ -49,6 +50,7 @@ public class Mailer {
     private static final String TITLE_CONFIRMATION = "Confirmation";
     private static final String TITLE_CONTACT_MESSAGE = "Contact Message";
     private static final String TITLE_MISSING_ROUTE = "Missing Route";
+    private static final String TITLE_PRICE_CREATED = "Price created";
     private static final String TITLE_SHARE_ANNOUNCEMENT = "Share Announcement";
     private static final String TITLE_SHARE_REQUEST = "Share Request";
     private static final String TITLE_SHARE_REQUEST_AGREED = "Share Request Agreed";
@@ -56,6 +58,9 @@ public class Mailer {
     private static final String TITLE_DAILY = "Daily";
     @Inject
     private SendGridSender sender;
+
+    @Inject
+    ProfileManager profileManager;
 
     public void sendDaily(String report, Profile profil) {
         sender.send(TITLE_DAILY, "dispatch@taxisurfr.com", report, profil);
@@ -70,6 +75,11 @@ public class Mailer {
     public void sendMissingRoute(PickupDropoff query, Profile profile) {
         String message = query.pickup + " to " + query.dropoff;
         sender.send(TITLE_MISSING_ROUTE, "dispatch@taxisurfr.com", message, profile);
+    }
+
+    public void sendPriceCreated(String pickup, String dropoff) {
+        String message = pickup + " to " + dropoff;
+        sender.send(TITLE_PRICE_CREATED, "dispatch@taxisurfr.com", message, profileManager.getProfile());
     }
 
     public void sendShareAnnouncementNotificationToDispatch(Booking booking, Profile profile) {

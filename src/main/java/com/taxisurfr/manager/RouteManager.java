@@ -76,13 +76,32 @@ public class RouteManager extends AbstractDao<Route> {
 
 
     public Route getRoute(String pickup, String dropoff) {
-        List<Route> routes = getEntityManager().createNamedQuery("Route.getByStartEnd")
+        Route route = findRoute(pickup,dropoff);
+
+        if (route == null){
+            PickupType pickupType = "Colombo Airport".equals(pickup) ? PickupType.AIRPORT : PickupType.HOTEL;
+            route = createRoute(pickup,dropoff,pickupType);
+        }
+        return route;
+    }
+
+    private Route createRoute(String pickup, String dropoff,PickupType pickupType){
+        Route route = new Route();
+
+        route.setStartroute(pickup);
+        route.setEndroute(dropoff);
+        setDescription(route);
+        route.setPickupType(pickupType);
+        persist(route);
+        return route;
+    }
+    public Route findRoute(String pickup, String dropoff) {
+        List<Route> routes =  getEntityManager().createNamedQuery("Route.getByStartEnd")
                 .setParameter("startroute", pickup)
                 .setParameter("endroute", dropoff)
                 .getResultList();
-        return routes.size() > 0 ? routes.get(0) : null;
+        return routes.size() != 0 ? routes.get(0) : null;
     }
-
 
     public List<Route> getRoutes() {
         return findAll();

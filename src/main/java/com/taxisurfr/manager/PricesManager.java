@@ -3,10 +3,13 @@ package com.taxisurfr.manager;
 import com.taxisurfr.domain.Contractor;
 import com.taxisurfr.domain.Price;
 import com.taxisurfr.domain.Route;
+import com.taxisurfr.util.Mailer;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -22,6 +25,11 @@ public class PricesManager extends AbstractDao<Price> {
     @Inject
     ContractorManager contractorManager;
 
+    @Inject
+    RouteManager routeManager;
+
+    @Inject
+    Mailer mailer;
 
     public  List<Price> getPrices(String email, boolean admin) {
         List<Price> pricesList = new ArrayList<>();
@@ -35,6 +43,15 @@ public class PricesManager extends AbstractDao<Price> {
                     .setParameter("contractor", contractor)
                     .getResultList();
         }
+
+        Comparator<Price> routeComparator = new Comparator<Price>() {
+
+            @Override
+            public int compare(Price o1, Price o2) {
+                return o1.getRoute().getStartroute().compareTo(o2.getRoute().getStartroute());
+            }
+        };
+        Collections.sort(pricesList, routeComparator);
         return pricesList;
     }
 
@@ -62,11 +79,48 @@ public class PricesManager extends AbstractDao<Price> {
         getEntityManager().persist(priceToMerge);
     }
 
-    public Price getById(Long id) {
-        return getEntityManager().find(Price.class,id);
+    public Price getById(Route route, Contractor contractor) {
+        return (Price) getEntityManager().createNamedQuery("Price.getByContractorAndRoute")
+                .setParameter("route", route)
+                .setParameter("contractor", contractor)
+                .getSingleResult();
     }
 
     public List<Price> getPrices(Route route) {
+        if (route == null) return new ArrayList<>();
+        List<Price> priceList = findPrices(route);
+        if (priceList.size()==0){
+            Route returnRoute = routeManager.findRoute(route.getEndroute(),route.getStartroute());
+            if (returnRoute!=null) {
+                priceList = findPrices(returnRoute);
+                if (priceList.size() == 0) {
+                    createPrice(route, 9999L);
+                } else {
+                    for (Price price : priceList) {
+                        createPrice(route, price.getCents());
+                    }
+                }
+            }else{
+                createPrice(route, 9999L);
+            }
+            priceList = findPrices(route);
+        }
+
+
+        return priceList;
+    }
+
+    private void createPrice(Route route, Long cents) {
+        Price price = new Price();
+        price.setRoute(route);
+        Contractor contractor = contractorManager.getContractorById(1L);
+        price.setContractor(contractor);
+        price.setCents(cents);
+        getEntityManager().persist(price);
+        mailer.sendPriceCreated(route.getStartroute(),route.getEndroute());
+    }
+
+    private List<Price>findPrices(Route route){
         List<Price> priceList = getEntityManager().createNamedQuery("Price.getByRoute")
                 .setParameter("route", route)
                 .getResultList();

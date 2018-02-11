@@ -21,7 +21,7 @@ insert into Contractor ( id, address1, address2, address3, address4, agentid, na
 
 
 delete from Profile;
-insert into Profile ( id,monitoremail, stripepublishable,stripesecret, test,sendgridkey,taxisurfUrl,taxisurfUrlClient) VALUES(1, 'dispatch@taxisurfr.com','pk_live_rM0BsbujtlKexSOwNL7WTZGj','sk_live_Vt2nWzrfS8TZzkRFpg66DBgZ',true,'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','https://taxisurfr-taxisurfr.rhcloud.com','https://app.taxisurfr.com');
+insert into Profile ( id,monitoremail, stripepublishable,stripesecret, test,sendgridkey,taxisurfUrl,taxisurfUrlClient) VALUES(1, 'dispatch@taxisurfr.com','pk_live_rM0BsbujtlKexSOwNL7WTZGj','sk_live_Vt2nWzrfS8TZzkRFpg66DBgZ',true,'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','https://taxisurfr-taxisurfr.rhcloud.com','https://app.taxisurfr.com');
 
 delete from Route;
 
