@@ -80,6 +80,7 @@ public class PricesManager extends AbstractDao<Price> {
     }
 
     public Price getById(Route route, Contractor contractor) {
+        logger.info("----------route "+ route.getId()+ " contractor "+contractor.getId());
         return (Price) getEntityManager().createNamedQuery("Price.getByContractorAndRoute")
                 .setParameter("route", route)
                 .setParameter("contractor", contractor)
