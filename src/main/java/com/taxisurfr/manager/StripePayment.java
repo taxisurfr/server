@@ -47,13 +47,7 @@ public class StripePayment {
         String error = null;
         Profile profile = profileManager.getProfile();
         try {
-            assert booking.getRoute().getContractorId() != null;
-            Contractor contractor = contractorManager.find(booking.getRoute().getContractorId());
-            logger.info("contractor with id:" + booking.getRoute().getContractorId());
-            logger.info("contractor :" + contractor);
-            assert contractor != null;
-            assert contractor.getAgentId() != null;
-
+            Contractor contractor = booking.getPrice().getContractor();
             Agent agent = agentManager.find(contractor.getAgentId());
 
             Finance finance = new Finance();
