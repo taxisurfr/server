@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @NamedQueries({
         @NamedQuery(name = "Price.getAll", query = "SELECT s FROM Price s" ),
-        @NamedQuery(name = "Price.getByContractorAndRoute", query = "SELECT s FROM Price s WHERE s.contractor = :contractor and s.route = :route" ),
         @NamedQuery(name = "Price.getByContractor", query = "SELECT s FROM Price s WHERE s.contractor = :contractor" ),
-        @NamedQuery(name = "Price.getByRoute", query = "SELECT s FROM Price s WHERE s.route = :route" )
+        @NamedQuery(name = "Price.getByLocation", query = "SELECT s FROM Price s WHERE s.startroute = :start and s.endroute = :end" ),
+        @NamedQuery(name = "Price.getByLocationAndContractor", query = "SELECT s FROM Price s WHERE s.startroute = :start and s.endroute = :end and s.contractor= :contractor" )
 })
 @XmlRootElement
 public class Price implements java.io.Serializable {
@@ -23,13 +23,43 @@ public class Price implements java.io.Serializable {
     private Contractor contractor;
 
     @OneToOne(fetch = FetchType.EAGER)
-    private Route route;
+    private Location startroute;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private Location endroute;
 
     @Column
     private Long cents;
 
+    @Column
+    private String link;
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+
     public Long getId() {
         return id;
+    }
+
+    public Location getStartroute() {
+        return startroute;
+    }
+
+    public void setStartroute(Location startroute) {
+        this.startroute = startroute;
+    }
+
+    public Location getEndroute() {
+        return endroute;
+    }
+
+    public void setEndroute(Location endroute) {
+        this.endroute = endroute;
     }
 
     public void setId(Long id) {
@@ -42,14 +72,6 @@ public class Price implements java.io.Serializable {
 
     public void setContractor(Contractor contractor) {
         this.contractor = contractor;
-    }
-
-    public Route getRoute() {
-        return route;
-    }
-
-    public void setRoute(Route route) {
-        this.route = route;
     }
 
     public Long getCents() {

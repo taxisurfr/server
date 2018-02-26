@@ -45,8 +45,7 @@ public class BookingManager extends AbstractDao<Booking> {
     public Booking createBooking(NewBookingJS newBooking, Price price, Agent agent, Contractor contractor) {
         OrderType orderType = newBooking.announceShare ? OrderType.SHARE_ANNOUNCEMENT : OrderType.BOOKING;
         Booking booking = new Booking();
-        Route route = routeManager.find(newBooking.price.getRoute().getId());
-        booking.setRoute(route);
+
         booking.setPrice(price);
         booking.setAgent(agent.getId());
         booking.setContractor(contractor.getId());
@@ -73,18 +72,16 @@ public class BookingManager extends AbstractDao<Booking> {
     @Column
     private Currency currency = Currency.USD;
 
-    public List<RouteAndSharingsJS.Share> getSharingsForRoute(Route route) {
+    public List<RouteAndSharingsJS.Share> getSharingsForRoute(Location start, Location end) {
         List<RouteAndSharingsJS.Share> shares = new ArrayList<>();
+        if (start == null || end == null) return shares;
 
         Route routeAlternative = null;
 
-        if (route != null) {
-            if (route.getId()==104){
-                routeAlternative = routeManager.find(112L);
-            }
+        if (start != null && end != null) {
             List<Booking> resultList = getEntityManager().createNamedQuery("Booking.getByRoute")
-                    .setParameter("route", route)
-                    .setParameter("routeAlternative", routeAlternative)
+                    .setParameter("start", start)
+                    .setParameter("end", end)
                     .setParameter("orderType1", OrderType.BOOKING)
                     .setParameter("orderType2", OrderType.SHARE_ANNOUNCEMENT)
                     .getResultList();

@@ -23,16 +23,18 @@ public class FinanceManager extends AbstractDao<Finance> {
     StripePayment stripePayment;
     @Inject
     BookingManager bookingManager;
+    @Inject
+    ContractorManager contractorManager;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public FinanceModel getFinances(String email, boolean admin) {
+    public FinanceModel getFinances(boolean admin, Contractor contractor) {
         FinanceModel financeModel = new FinanceModel();
         financeModel.admin = admin;
         try {
-            List<Finance> payments = !admin ?
+            List<Finance> payments = contractor!=null ?
                     getEntityManager().createNamedQuery("Finance.getByAgent")
-                            .setParameter("agentEmail", email)
+                            .setParameter("agentEmail", contractor.getEmail())
                             .setParameter("financeType", FinanceType.PAYMENT)
                             .getResultList()
                     :
@@ -40,9 +42,9 @@ public class FinanceManager extends AbstractDao<Finance> {
                             .setParameter("financeType", FinanceType.PAYMENT)
                             .getResultList();
 
-            List<Finance> transfers = !admin ?
+            List<Finance> transfers = contractor!=null ?
                     getEntityManager().createNamedQuery("Finance.getByAgent")
-                            .setParameter("agentEmail", email)
+                            .setParameter("agentEmail", contractor.getEmail())
                             .setParameter("financeType", FinanceType.TRANSFER)
                             .getResultList()
                     :
@@ -130,31 +132,33 @@ public class FinanceManager extends AbstractDao<Finance> {
     }
 
     public FinanceModel addTransfer(String email, String name,boolean admin) {
-        Agent agent = (Agent) getEntityManager().createNamedQuery("Agent.getByEmail")
+        Contractor contractor = (Contractor) getEntityManager().createNamedQuery("Contractor.getByEmail")
                 .setParameter("email", email)
                 .getResultList().get(0);
 
         Finance finance = new Finance();
-        finance.setAgentEmail(agent.getEmail());
+        finance.setAgentEmail(contractor.getEmail());
         finance.setType(FinanceType.TRANSFER);
         finance.setDate(new Timestamp(new Date().getTime()));
 
         getEntityManager().persist(finance);
 
-        return getFinances(email,admin);
+        return getFinances(admin,contractor);
     }
 
-    public FinanceModel cancelBooking(String email, Long bookingId,boolean admin) {
+    public FinanceModel cancelBooking(Long bookingId,boolean admin) {
         FinanceModel financeModel = null;
         Finance finance = getByBookingId(bookingId);
+        Contractor contractor = contractorManager.getByEmail(finance.getAgentEmail());
         if (finance != null) {
 
             stripePayment.refund(finance);
 
             getEntityManager().persist(finance);
 
+
         }
-        return getFinances(email,admin);
+        return getFinances(admin,contractor);
     }
 
     private Finance getByBookingId(Long bookingId) {

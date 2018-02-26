@@ -31,6 +31,9 @@ public class TaxisurfrImpl {
     private BookingManager bookingManager;
 
     @Inject
+    private LocationManager locationManager;
+
+    @Inject
     private PricesManager pricesManager;
 
     @Inject
@@ -94,9 +97,10 @@ public class TaxisurfrImpl {
     @Path("/routefromlink")
     public RouteAndSharingsJS getRouteFromLink(Query query) throws IllegalArgumentException {
         RouteAndSharingsJS routeAndSharingsJS = new RouteAndSharingsJS();
-        routeAndSharingsJS.route = routeManager.getRouteFromLink(query.link);
-        routeAndSharingsJS.prices = pricesManager.getPrices(routeAndSharingsJS.route);
-        routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(routeAndSharingsJS.route);
+        Location start =locationManager.getStartFromLink(query.link);
+        Location end =locationManager.getEndFromLink(query.link);
+        routeAndSharingsJS.prices = pricesManager.getPrices(start,end);
+        routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(start,end);
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
         routeAndSharingsJS.showNoRouteMessage = false;
         return routeAndSharingsJS;
@@ -112,23 +116,23 @@ public class TaxisurfrImpl {
     }
 
     @POST
+    @Path("/location")
+    public List<Location> getLocation(Query query) throws IllegalArgumentException {
+        return locationManager.getLocationLike(query.link);
+    }
+
+    @POST
     @Path("/routeandsharings")
     public RouteAndSharingsJS getRouteAndBookings(@Context HttpHeaders headers, PickupDropoff query) throws IllegalArgumentException {
         logger.info("pickup:" + query.pickup + "dropoff:" + query.dropoff);
         RouteAndSharingsJS routeAndSharingsJS = new RouteAndSharingsJS();
-        routeAndSharingsJS.route = routeManager.getRoute(query.pickup, query.dropoff);
-        routeAndSharingsJS.prices = pricesManager.getPrices(routeAndSharingsJS.route);
-        routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(routeAndSharingsJS.route);
+        Location start = locationManager.getLocation(query.pickup);
+        Location end = locationManager.getLocation(query.dropoff);
+        routeAndSharingsJS.prices = pricesManager.getPrices(start,end);
+        routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(start,end);
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
-        routeAndSharingsJS.showNoRouteMessage = true;
+        routeAndSharingsJS.showNoRouteMessage = false;
 
-        logger.info("route:" + routeAndSharingsJS.route);
-        if (routeAndSharingsJS.route == null) {
-            mailer.sendMissingRoute(query, profileManager.getProfile());
-        }
-/*
-        createSessionStat(headers,"routeandsharings"+query.pickup+"_"+query.dropoff);
-*/
         return routeAndSharingsJS;
     }
 
@@ -171,6 +175,7 @@ public class TaxisurfrImpl {
         return routeManager.getRouteFromLink(link);
     }
 
+/*
     @POST
     @Path("/resort")
     public RouteAndSharingsJS getResortSharings(@Context HttpHeaders headers, RouteLinkJS routeLinkJS) throws IllegalArgumentException {
@@ -180,11 +185,14 @@ public class TaxisurfrImpl {
         routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(routeAndSharingsJS.route);
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
         logger.info("route:" + routeAndSharingsJS.route);
+*/
 /*
         createSessionStat(headers,"resort:"+routeAndSharingsJS.route.startroute+"_"+routeAndSharingsJS.route.endroute);
-*/
+*//*
+
         return routeAndSharingsJS;
     }
+*/
 
     @POST
     @Path("/doshare")
@@ -214,11 +222,11 @@ public class TaxisurfrImpl {
     @Path("/newbooking")
     public Booking addBooking(@Context HttpHeaders headers, NewBookingJS booking) throws IllegalArgumentException {
         logger.info("addBooking");
-        Route route = routeManager.find(booking.price.getRoute().getId());
+        //Route route = routeManager.find(booking.price.getRoute().getId());
         Contractor contractor = contractorManager.find(booking.price.getContractor().getId());
         Agent agent = agentManager.find(contractor.getAgentId());
         Price price = pricesManager.find(booking.price.getId());
-        createSessionStat(headers, "", "newbooking:" + route.startroute + "_" + route.endroute);
+        createSessionStat(headers, "", "newbooking:" + booking.price.getStartroute().getName() + "_" + booking.price.getEndroute().getName());
         return bookingManager.createBooking(booking, price, agent, contractor);
     }
 

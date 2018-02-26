@@ -14,7 +14,7 @@ insert into Contractor ( id, address1, address2, address3, address4, agentid, na
 
 
 delete from Profile;
-insert into Profile ( id,monitoremail, stripepublishable,stripesecret, test,sendgridkey,taxisurfUrlClient) VALUES(1, 'dispatch@taxisurfr.com','pk_test_rcKuNpP9OpTri7twmZ77UOI5','sk_test_TCIbuNPlBRe4VowPhqekTO1L',true,'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','http://localhost:3000');
+insert into Profile ( id,monitoremail, stripepublishable,stripesecret, test,sendgridkey,taxisurfUrlClient) VALUES(1,             'dispatch@taxisurfr.com','pk_test_rcKuNpP9OpTri7twmZ77UOI5','sk_test_TCIbuNPlBRe4VowPhqekTO1L',true,'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','http://localhost:3000');
 
 delete from Route;
 insert into Route (id,contractorId,pickupType,startroute,endroute,cents,centsToJoin,link,associatedRoute,inactive,description) VALUES(100,1,1,'Colombo Airport','Unawatuna',11000,4000,'unawatuna',null,false,'Three hours.drive. 127km. All fuel charges and expenses are included.');

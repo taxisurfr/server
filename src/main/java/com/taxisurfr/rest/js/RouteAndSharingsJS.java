@@ -20,7 +20,6 @@ public class RouteAndSharingsJS {
     }
 
     public List<Price> prices;
-    public Route route;
     public List<Share> sharingList;
     public String stripeKey;
     public boolean showNoRouteMessage;

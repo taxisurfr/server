@@ -26,6 +26,9 @@ public class AdminEndpoint {
     private BookingManager bookingManager;
 
     @Inject
+    LocationManager locationManager;
+
+    @Inject
     FinanceManager financeManager;
     @Inject
     RouteManager routeManager;
@@ -111,33 +114,7 @@ public class AdminEndpoint {
         return loginDetailsJS;
     }
 
-    @POST
-    @Path("/finance")
-    @Consumes("application/json")
-    @Authenicate
-    public FinanceModel finance(@Context SecurityContext sc, TransferJS contractorJS) throws IllegalArgumentException {
-        logger.info("");
-        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
-        boolean admin = isAdmin(email);
-        if (email != null) {
-            FinanceModel financeModel = financeManager.getFinances(email, admin);
-            financeModel.contractorIdList = contractorManager.getContractorIdList(admin);
-            long firstContractorId;
-            if (contractorJS == null) {
-                //take first in list
-                if (financeModel.contractorIdList.size() > 0) {
-                    firstContractorId = financeModel.contractorIdList.get(0).id;
-                    financeModel.contractor = contractorManager.getContractorById(firstContractorId);
-                }
-            } else {
-                firstContractorId = 51L;
-                financeModel.contractor = contractorManager.getContractorById(firstContractorId);
-            }
-            return financeModel;
-        } else {
-            return null;
-        }
-    }
+
 
     @POST
     @Path("/createTransfer")
@@ -147,9 +124,9 @@ public class AdminEndpoint {
         String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
         boolean admin = isAdmin(email);
         if (email != null) {
-            Agent agent = agentManager.find(transferJS.agentId);
-            financeManager.saveTransfer(agent.getEmail(), admin, transferJS.cents, transferJS.description);
-            FinanceModel financeModel = financeManager.getFinances(email, admin);
+            Contractor contractor = contractorManager.find(transferJS.contractorId);
+            financeManager.saveTransfer(contractor.getEmail(), admin, transferJS.cents, transferJS.description);
+            FinanceModel financeModel = financeManager.getFinances(admin,contractor);
             return financeModel;
         } else {
             return null;
@@ -169,6 +146,34 @@ public class AdminEndpoint {
             RoutesModel routesModel = getRoutesModel(email);
             routesModel.created = created;
             return routesModel;
+        } else {
+            return null;
+        }
+    }
+
+    @POST
+    @Path("/finance")
+    @Authenicate
+    public FinanceModel finance(@Context SecurityContext sc, ContractorJS contractorJS) throws IllegalArgumentException {
+        logger.info("");
+        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+        boolean admin = isAdmin(email);
+        if (email != null) {
+            Contractor contractor = contractorJS.id != null ? contractorManager.getContractorById(contractorJS.id) : null;
+            FinanceModel financeModel = financeManager.getFinances(admin,contractor);
+            financeModel.contractorIdList = contractorManager.getContractorIdList(admin);
+            long firstContractorId;
+            if (contractorJS == null) {
+                //take first in list
+                if (financeModel.contractorIdList.size() > 0) {
+                    firstContractorId = financeModel.contractorIdList.get(0).id;
+                    financeModel.contractor = contractorManager.getContractorById(firstContractorId);
+                }
+            } else {
+                firstContractorId = 51L;
+                financeModel.contractor = contractorManager.getContractorById(firstContractorId);
+            }
+            return financeModel;
         } else {
             return null;
         }
@@ -258,22 +263,21 @@ public class AdminEndpoint {
         PricesModel pricesModel = new PricesModel();
         pricesModel.admin = isAdmin(email);
 
-        Route route = null;
         Contractor contractor = priceJS.contractorId == null ?
                 contractorManager.getContractorById(1000L) :
                 contractorManager.getContractorById(priceJS.contractorId);
         if (!priceJS.newPrice) {
-            route = routeManager.getRouteById(priceJS.routeId);
-            Price price = pricesManager.getById(route, contractor);
+            Location start = locationManager.find(priceJS.start);
+            Location end = locationManager.find(priceJS.end);
+            Price price = pricesManager.getByLocationAndContractor(start,end, contractor);
             price.setCents(priceJS.cents);
             pricesManager.persist(price);
 
         } else {
 
-            route = routeManager.getRoute(priceJS.startroute, priceJS.endroute);
-
             Price price = new Price();
-            price.setRoute(route);
+            price.setStartroute(locationManager.find(priceJS.start));
+            price.setEndroute(locationManager.find(priceJS.end));
             price.setContractor(contractor);
             price.setCents(priceJS.cents);
 
@@ -330,30 +334,12 @@ public class AdminEndpoint {
         logger.info("");
         String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
         if (email != null) {
-            financeModel = financeManager.cancelBooking(email, cancelBookingJS.bookingId, isAdmin(email));
+            financeModel = financeManager.cancelBooking(cancelBookingJS.bookingId, isAdmin(email));
             bookingManager.cancelBooking(cancelBookingJS.bookingId);
         }
         return getBookingModel(email);
     }
 
-    /*   @POST
-       @Path("/editRoute")
-       @Consumes("application/json")
-       @Authenicate
-       public RoutesModel editRoute(@Context SecurityContext sc, EditRouteJS editBookingJS) throws
-               IllegalArgumentException {
-
-           FinanceModel financeModel = null;
-           logger.info("");
-           String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
-           if (email != null) {
-               routeManager.editRoute(editBookingJS.id, editBookingJS.cents);
-           }
-
-
-           return getRoutesModel(email);
-       }
-   */
     private RoutesModel getRoutesModel(String email) {
         RoutesModel routesModel = new RoutesModel();
         routesModel.admin = isAdmin(email);
