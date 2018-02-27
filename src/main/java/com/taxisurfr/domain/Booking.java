@@ -63,8 +63,7 @@ import java.util.Date;
     @Column private int paidPrice;
     @Column private int sharePrice;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @MapsId
+    @ManyToOne(fetch = FetchType.EAGER)
     private Price price;
 
     public Price getPrice() {
@@ -93,6 +92,7 @@ import java.util.Date;
         this.paidPrice = paidPrice;
     }
 
+    @Deprecated
     public Route getRoute()
     {
         return route;

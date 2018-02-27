@@ -1,6 +1,5 @@
 package com.taxisurfr.domain;
 
-import javax.enterprise.inject.Model;
 import javax.persistence.*;
 
 @Entity
@@ -17,7 +16,6 @@ public class Agent implements java.io.Serializable {
 
     @Column private String email;
     @Column private Long mobile;
-    @Column private Long orderCount;
 
     public String getEmail() {
         return email;
@@ -25,14 +23,6 @@ public class Agent implements java.io.Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @SuppressWarnings("JpaAttributeMemberSignatureInspection")
-    public Long getOrderCount() {
-        if (orderCount == null) {
-            orderCount = 0L;
-        }
-        return orderCount++;
     }
 
     public void setMobile(Long mobile) {

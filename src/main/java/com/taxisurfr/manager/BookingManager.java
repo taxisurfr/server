@@ -47,7 +47,6 @@ public class BookingManager extends AbstractDao<Booking> {
         Booking booking = new Booking();
 
         booking.setPrice(price);
-        booking.setAgent(agent.getId());
         booking.setContractor(contractor.getId());
         booking.setDate(new Timestamp(newBooking.date.getTime()));
         booking.setName(newBooking.name);
@@ -134,7 +133,7 @@ public class BookingManager extends AbstractDao<Booking> {
     public ShareJS share(ShareRequest shareRequest) {
         Booking booker = find(shareRequest.bookingId);
         Booking sharer = new Booking();
-        sharer.setRoute(booker.getRoute());
+        sharer.setPrice(booker.getPrice());
         sharer.setOrderType(OrderType.SHARE_REQUEST);
         sharer.setStatus(BookingStatus.SHARE_REQUEST_SENT);
         sharer.setBooker(booker);

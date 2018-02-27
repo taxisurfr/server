@@ -2,10 +2,7 @@ package com.taxisurfr.util;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import com.taxisurfr.domain.Agent;
-import com.taxisurfr.domain.Booking;
-import com.taxisurfr.domain.Contractor;
-import com.taxisurfr.domain.Route;
+import com.taxisurfr.domain.*;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -39,7 +36,7 @@ public class PdfUtil {
     static final String CUSTOMER_FEEDBACK = "BTW. You will receive a link for feedback shortly after your trip. Taking a few minutes to answer this will help us greatly. Thank you in advance.";
 
 
-    public byte[] generateTaxiOrder(String path, Booking booking, Route route, Agent agent, Contractor contractor) {
+    public byte[] generateTaxiOrder(String path, Booking booking, Agent agent, Contractor contractor) {
         PdfReader reader;
         try {
             InputStream inputStream = getClass().getClassLoader()
@@ -50,7 +47,7 @@ public class PdfUtil {
             PdfStamper stamper = new PdfStamper(reader, out);
             PdfContentByte canvas = stamper.getOverContent(1);
 
-            PdfPTable table = createBookingTable(booking, route);
+            PdfPTable table = createBookingTable(booking);
             table.writeSelectedRows(0, 2, 0, 11, INSET, TABLE_Y, canvas);
 
             Font helvetica20 = new Font(Font.FontFamily.HELVETICA, 20);
@@ -59,15 +56,17 @@ public class PdfUtil {
 
             // route
             int addressY = 430;
-            Chunk chunk = new Chunk(route.getStartroute() + " to " + route.getEndroute(), helvetica20);
+            Location start = booking.getPrice().getStartroute();
+            Location end = booking.getPrice().getEndroute();
+            Chunk chunk = new Chunk(start.getName() + " to " + end.getName(), helvetica20);
             ColumnText.showTextAligned(canvas,
                     Element.ALIGN_LEFT, new Phrase(chunk), INSET, addressY, 0);
 
             addressY = 564;
 
             // agent
-            if (agent.getEmail() != null) {
-                chunk = new Chunk(agent.getEmail(), helvetica14);
+            if (contractor.getEmail() != null) {
+                chunk = new Chunk(contractor.getEmail(), helvetica14);
                 ColumnText.showTextAligned(canvas,
                         Element.ALIGN_LEFT, new Phrase(chunk), INSET + 120, addressY, 0);
             }
@@ -111,7 +110,7 @@ public class PdfUtil {
     }
 
 
-    public PdfPTable createBookingTable(Booking booking, Route route) {
+    public PdfPTable createBookingTable(Booking booking) {
         PdfPTable table = new PdfPTable(2);
         table.setTotalWidth(TABLE_WIDTH);
         table.setWidthPercentage(TABLE_WIDTH / 3f);
@@ -121,6 +120,7 @@ public class PdfUtil {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        PickupType pickupType = booking.getPrice().getStartroute().getName().equals("COLOMBO AIRPORT") ? PickupType.AIRPORT : PickupType.HOTEL;
         // the cell object
         PdfPCell cell;
         table.addCell(ORDERNO);
@@ -135,9 +135,9 @@ public class PdfUtil {
         table.addCell("" + booking.getSurfboards());
         table.addCell(DATE);
         table.addCell(booking.getDateText());
-        table.addCell(route.getPickupType().getLocationType());
+        table.addCell(pickupType.getLocationType());
         table.addCell(booking.getFlightNo());
-        table.addCell(route.getPickupType().getTimeType());
+        table.addCell(pickupType.getTimeType());
         table.addCell(booking.getLandingTime());
         //table.addCell(PAID);
 

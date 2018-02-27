@@ -55,27 +55,24 @@ public class StripePayment {
             finance.setCurrency(Currency.USD);
             finance.setName(booking.getOrderRef());
             finance.setDate(new Timestamp(new Date().getTime()));
-            finance.setAgentEmail(agent.getEmail());
+            finance.setAgentEmail(contractor.getEmail());
 
             long centsToPay = booking.getPrice().getCents();
-            if (booking.getRoute().getPickupType()==PickupType.SHUTTLE_AIRPORT || booking.getRoute().getPickupType()==PickupType.SHUTTLE_HOTEL){
-                centsToPay = booking.getPrice().getCents() * booking.getPax();
-            }
 
             finance.setAmount((int)centsToPay);
             finance.setBookingId(booking.getId());
 
-            error = charge(token, booking, booking.getRoute(), finance, (int)centsToPay);
+            error = charge(token, booking, finance, (int)centsToPay);
             if (error==null) {
                 booking.setPaidPrice((int)centsToPay);
-                booking.setRef(agent.getOrderCount() + "_" + booking.getName());
+                booking.setRef(contractor.getOrderCount() + "_" + booking.getName());
                 byte[] pdfData = new PdfUtil()
-                        .generateTaxiOrder("template/order_with_feedback.pdf", booking, booking.getRoute(), agent, contractor);
+                        .generateTaxiOrder("template/order_with_feedback.pdf", booking, agent, contractor);
                 booking.setPdf(pdfData);
                 bookingManager.edit(booking);
 
-                mailer.sendConfirmation(booking, booking.getRoute(), profileManager.getProfile(), agent, contractor, share);
-                agent.getOrderCount();
+                mailer.sendConfirmation(booking, profileManager.getProfile(), agent, contractor, share);
+                contractor.getOrderCount();
 
                 financeDao.persist(finance);
 
@@ -91,7 +88,7 @@ public class StripePayment {
         return error;
     }
 
-    public String charge(String card, Booking booking, Route route, Finance finance, int cents) {
+    public String charge(String card, Booking booking , Finance finance, int cents) {
 
         String error = null;
         try {

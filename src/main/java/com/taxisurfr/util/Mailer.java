@@ -84,7 +84,7 @@ public class Mailer {
 
     public void sendShareAnnouncementNotificationToDispatch(Booking booking, Profile profile) {
         String message = booking.getName();
-        message += "\n"+booking.getRoute().startroute + " to " + booking.getRoute().endroute;
+        message += "\n"+booking.getPrice().getStartroute().getName() + " to " + booking.getPrice().getEndroute().getName();
         sender.send(TITLE_SHARE_ANNOUNCEMENT, "dispatch@taxisurfr.com", message, profile);
     }
 
@@ -120,7 +120,7 @@ public class Mailer {
     public void sendShareRequest(Booking sharer, Booking booker, Profile profile, String message) {
         if (booker.getOrderType().equals(OrderType.BOOKING)) {
             String html = "error";
-            html = toConfirmationEmailHtml(sharer, sharer.getRoute(), SHARE_REQUEST, profile, toPairList(sharer,  sharer.getRoute(),true));
+            html = toConfirmationEmailHtml(sharer, SHARE_REQUEST, profile, toPairList(sharer,true));
 
             html = html.replace("____INSERT___DETAILS___", getSharingDetails(sharer));
             html = html.replace("___SHARE_MESSAGE__", message != null ? message : "");
@@ -132,7 +132,7 @@ public class Mailer {
         }
         if (booker.getOrderType().equals(OrderType.SHARE_ANNOUNCEMENT)) {
             String html = "error";
-            html = toConfirmationEmailHtml(sharer, sharer.getRoute(), SHARE_ANNOUNCEMENT_REQUEST, profile, toPairListForAnnouncement(sharer,  sharer.getRoute()));
+            html = toConfirmationEmailHtml(sharer, SHARE_ANNOUNCEMENT_REQUEST, profile, toPairListForAnnouncement(sharer));
 
             html = html.replace("____INSERT___DETAILS___", getSharingDetailsForAnnouncement(sharer));
             html = html.replace("___SHARE_MESSAGE__", message != null ? message : "");
@@ -147,7 +147,7 @@ public class Mailer {
         String html = null;
         switch (bookingStatus) {
             case SHARE_ACCEPTED:
-                html = toConfirmationEmailHtml(sharer, sharer.getRoute(), SHARE_ACCEPTED, profile,toPairList(sharer.getBooker(),  sharer.getRoute(),true));
+                html = toConfirmationEmailHtml(sharer, SHARE_ACCEPTED, profile,toPairList(sharer.getBooker(),true));
 
                 html = html.replace("____INSERT___DETAILS___", getSharingDetails(sharer.getBooker()));
                 html = html.replace("___BOOK_SHARE_LINK___", profile.getTaxisurfUrlClient() + BOOKSHARE + "/" + sharer.getId());
@@ -157,7 +157,7 @@ public class Mailer {
                 break;
 
             case SHARE_REFUSED:
-                html = toConfirmationEmailHtml(sharer, sharer.getRoute(), SHARE_REFUSED, profile,toPairList(sharer,  sharer.getRoute(),true));
+                html = toConfirmationEmailHtml(sharer, SHARE_REFUSED, profile,toPairList(sharer,  true));
                 sender.send(TITLE_SHARE_REQUEST_REFUSED, sharer.getEmail(), html, profile);
                 sender.send(TITLE_SHARE_REQUEST_REFUSED, "dispatch@taxisurfr.com", html, profile);
                 break;
@@ -168,30 +168,30 @@ public class Mailer {
     }
 
     private String getSharingDetails(Booking booking) {
-        String details = booking.getRoute().startroute + " to " + booking.getRoute().endroute + "\n";
+        String details = booking.getPrice().getStartroute().getName() + " to " + booking.getPrice().getEndroute().getName() + "\n";
         details += booking.getDateText();
         details += booking.getLandingTime();
         return details;
 
     }
     private String getSharingDetailsForAnnouncement(Booking booking) {
-        String details = booking.getRoute().startroute + " to " + booking.getRoute().endroute + "\n";
+        String details = booking.getPrice().getStartroute().getName() + " to " + booking.getPrice().getEndroute().getName() + "\n";
         details += booking.getDateText();
         details += booking.getName();
         details += booking.getEmail();
         return details;
 
     }
-    public void sendConfirmation(Booking booking, Route route, Profile profile, Agent agent, Contractor contractor,boolean share) {
+    public void sendConfirmation(Booking booking, Profile profile, Agent agent, Contractor contractor,boolean share) {
         String html = "error";
-        html = toConfirmationEmailHtml(booking, route, CONFIRMATION, profile,toPairList(booking,  route,true));
+        html = toConfirmationEmailHtml(booking, CONFIRMATION, profile,toPairList(booking,true));
         String confirmationString = profile.getTaxisurfUrl().contains("localhost")?"TEST Confirmation":"Booking Confirmation";
         html = html.replace("__CONFIMATION__", confirmationString);
 
         String email = booking.getEmail();
         sender.send(TITLE_CONFIRMATION, booking.getEmail(), html, profile);
         sender.send(TITLE_CONFIRMATION, "dispatch@taxisurfr.com", html, profile);
-        sender.send(TITLE_CONFIRMATION, agent.getEmail(), html, profile);
+        sender.send(TITLE_CONFIRMATION, contractor.getEmail(), html, profile);
         sender.send(TITLE_CONFIRMATION, EMAILIT, html, profile);
     }
 
@@ -210,7 +210,7 @@ public class Mailer {
 
     private static String FACEBOOK_PAGE = "https://www.facebook.com/taxisurfr";
 
-    public String toConfirmationEmailHtml(Booking booking, Route route, String path, Profile profile,List<Pair<String, String>> pairs) {
+    public String toConfirmationEmailHtml(Booking booking, String path, Profile profile,List<Pair<String, String>> pairs) {
         try {
             String html = getTemplate(path);
 
@@ -226,7 +226,7 @@ public class Mailer {
             String bookingLink = profile.getTaxisurfUrl()+"/rest/api/form?id=" + booking.getId();
             html = html.replace("___BOOKING_LINK___", bookingLink);
 
-            String taxisurfrRouteLink = profile.getTaxisurfUrl() + "?route=" + booking.getRoute().getId();
+            String taxisurfrRouteLink = profile.getTaxisurfUrl() + "/"+booking.getPrice().getLink();
             taxisurfrRouteLink = FACEBOOK_PAGE;
 
             html = html.replace("__TAXISURFR_ROUTE_LINK__", taxisurfrRouteLink);
@@ -246,12 +246,14 @@ public class Mailer {
         return null;
     }
 
-    public static List<Pair<String, String>> toPairList(Booking booking, Route route, boolean sharing) {
+    public static List<Pair<String, String>> toPairList(Booking booking, boolean sharing) {
         List<Pair<String, String>> list = new ArrayList<Pair<String, String>>();
+        PickupType pickupType = booking.getPrice().getStartroute().getName().equals("COLOMBO AIRPORT") ? PickupType.AIRPORT : PickupType.HOTEL;
 
-        list.add(Pair.of(ROUTE, route.getStartroute() + " to " + route.getEndroute()));
+        Location start = booking.getPrice().getStartroute();
+        Location end = booking.getPrice().getEndroute();
+        list.add(Pair.of(ROUTE, start.getName() + " to " + end.getName()));
         list.add(Pair.of(DATE, booking.getDateText()));
-        PickupType pickupType = route.getPickupType();
         list.add(Pair.of(pickupType.getLocationType(), booking.getFlightNo()));
         list.add(Pair.of(pickupType.getTimeType(), booking.getLandingTime()));
         if (!sharing)list.add(Pair.of(NAME, booking.getName()));
@@ -277,10 +279,10 @@ public class Mailer {
         return list;
     }
 
-    public static List<Pair<String, String>> toPairListForAnnouncement(Booking booking, Route route) {
+    public static List<Pair<String, String>> toPairListForAnnouncement(Booking booking) {
         List<Pair<String, String>> list = new ArrayList<Pair<String, String>>();
 
-        list.add(Pair.of(ROUTE, route.getStartroute() + " to " + route.getEndroute()));
+        list.add(Pair.of(ROUTE, booking.getPrice().getStartroute().getName() + " to " + booking.getPrice().getEndroute().getName()));
         list.add(Pair.of(DATE, booking.getDateText()));
         list.add(Pair.of(NAME, booking.getName()));
         list.add(Pair.of(EMAIL, booking.getEmail()));

@@ -36,6 +36,15 @@ public class Contractor implements java.io.Serializable {
     @Column private String address2;
     @Column private String address3;
     @Column private String address4;
+    @Column private Long orderCount;
+
+    @SuppressWarnings("JpaAttributeMemberSignatureInspection")
+    public Long getOrderCount() {
+        if (orderCount == null) {
+            orderCount = 0L;
+        }
+        return orderCount++;
+    }
 
     public Long getId() {
         return id;

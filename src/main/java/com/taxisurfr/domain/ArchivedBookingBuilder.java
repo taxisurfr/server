@@ -19,7 +19,7 @@ public class ArchivedBookingBuilder {
         archivedBooking.setShareWanted(booking.getShareWanted());
         archivedBooking.setOrderType(booking.getOrderType());
         archivedBooking.setStatus(booking.getStatus());
-        archivedBooking.setRoute(booking.getRoute().getId());
+        archivedBooking.setRoute(booking.getPrice().getId());
 
         return archivedBooking;
     }
