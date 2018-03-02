@@ -175,25 +175,6 @@ public class TaxisurfrImpl {
         return routeManager.getRouteFromLink(link);
     }
 
-/*
-    @POST
-    @Path("/resort")
-    public RouteAndSharingsJS getResortSharings(@Context HttpHeaders headers, RouteLinkJS routeLinkJS) throws IllegalArgumentException {
-        RouteAndSharingsJS routeAndSharingsJS = new RouteAndSharingsJS();
-        routeAndSharingsJS.route = routeManager.getRouteFromLink(routeLinkJS.link);
-        routeAndSharingsJS.prices = pricesManager.getPrices(routeAndSharingsJS.route);
-        routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(routeAndSharingsJS.route);
-        routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
-        logger.info("route:" + routeAndSharingsJS.route);
-*/
-/*
-        createSessionStat(headers,"resort:"+routeAndSharingsJS.route.startroute+"_"+routeAndSharingsJS.route.endroute);
-*//*
-
-        return routeAndSharingsJS;
-    }
-*/
-
     @POST
     @Path("/doshare")
     public DoShareResponseJS doShareCmd(DoShareJS routeLinkJS) throws IllegalArgumentException {
