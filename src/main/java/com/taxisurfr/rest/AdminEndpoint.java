@@ -115,7 +115,6 @@ public class AdminEndpoint {
     }
 
 
-
     @POST
     @Path("/createTransfer")
     @Authenicate
@@ -126,7 +125,7 @@ public class AdminEndpoint {
         if (email != null) {
             Contractor contractor = contractorManager.find(transferJS.contractorId);
             financeManager.saveTransfer(contractor.getEmail(), admin, transferJS.cents, transferJS.description);
-            FinanceModel financeModel = financeManager.getFinances(admin,contractor);
+            FinanceModel financeModel = financeManager.getFinances(admin, contractor);
             return financeModel;
         } else {
             return null;
@@ -156,27 +155,21 @@ public class AdminEndpoint {
     @Authenicate
     public FinanceModel finance(@Context SecurityContext sc, ContractorJS contractorJS) throws IllegalArgumentException {
         logger.info("");
-        String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
+        FinanceModel financeModel = null;
+                String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
         boolean admin = isAdmin(email);
         if (email != null) {
             Contractor contractor = contractorJS.id != null ? contractorManager.getContractorById(contractorJS.id) : null;
-            FinanceModel financeModel = financeManager.getFinances(admin,contractor);
+            financeModel = financeManager.getFinances(admin,contractor);
             financeModel.contractorIdList = contractorManager.getContractorIdList(admin);
-            long firstContractorId;
-            if (contractorJS == null) {
-                //take first in list
-                if (financeModel.contractorIdList.size() > 0) {
-                    firstContractorId = financeModel.contractorIdList.get(0).id;
-                    financeModel.contractor = contractorManager.getContractorById(firstContractorId);
-                }
+            if (contractor != null) {
+                financeModel.contractor = contractor;
             } else {
-                firstContractorId = 51L;
+                long firstContractorId = financeModel.contractorIdList.get(0).id;
                 financeModel.contractor = contractorManager.getContractorById(firstContractorId);
             }
-            return financeModel;
-        } else {
-            return null;
         }
+        return financeModel;
     }
 
     @POST
@@ -250,8 +243,8 @@ public class AdminEndpoint {
 
         Agent agent = !pricesModel.admin ? agentManager.getAgent(email) : null;
 
-        pricesModel.routes = routeManager.getRoutes(agent, pricesModel.admin);
-        pricesModel.locations = routeManager.getLocations((List<Route>) pricesModel.routes);
+        pricesModel.locations = locationManager.findAll();
+        pricesModel.contractors = contractorManager.getContractorList(true);
         return pricesModel;
     }
 
@@ -267,17 +260,21 @@ public class AdminEndpoint {
                 contractorManager.getContractorById(1000L) :
                 contractorManager.getContractorById(priceJS.contractorId);
         if (!priceJS.newPrice) {
-            Location start = locationManager.find(priceJS.start);
-            Location end = locationManager.find(priceJS.end);
-            Price price = pricesManager.getByLocationAndContractor(start,end, contractor);
+            Location start = locationManager.find(priceJS.startroute.getId());
+            Location end = locationManager.find(priceJS.endroute.getId());
+            Price price = pricesManager.getByLocationAndContractor(start, end, contractor);
             price.setCents(priceJS.cents);
+            if (priceJS.newcontractorId != price.getContractor().getId()) {
+                Contractor newContractor = contractorManager.find(priceJS.newcontractorId);
+                price.setContractor(newContractor);
+            }
             pricesManager.persist(price);
 
         } else {
 
             Price price = new Price();
-            price.setStartroute(locationManager.find(priceJS.start));
-            price.setEndroute(locationManager.find(priceJS.end));
+            price.setStartroute(locationManager.find(priceJS.startroute.getId()));
+            price.setEndroute(locationManager.find(priceJS.endroute.getId()));
             price.setContractor(contractor);
             price.setCents(priceJS.cents);
 
@@ -316,8 +313,8 @@ public class AdminEndpoint {
         BookingModel bookingModel = null;
         boolean admin = isAdmin(email);
         if (email != null) {
-            Agent agent = !admin ? agentManager.getAgent(email) : null;
-            bookingModel = bookingManager.getBookings(agent, admin);
+            Contractor contractor = !admin ? contractorManager.getByEmail(email) : null;
+            bookingModel = bookingManager.getBookings(contractor, admin);
         }
         return bookingModel;
     }

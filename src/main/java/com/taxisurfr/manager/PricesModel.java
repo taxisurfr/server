@@ -8,6 +8,6 @@ public class PricesModel {
 
     public List prices;
     public boolean admin;
-    public List routes;
     public List locations;
+    public List contractors;
 }

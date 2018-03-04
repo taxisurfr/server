@@ -36,7 +36,7 @@ public class PdfUtil {
     static final String CUSTOMER_FEEDBACK = "BTW. You will receive a link for feedback shortly after your trip. Taking a few minutes to answer this will help us greatly. Thank you in advance.";
 
 
-    public byte[] generateTaxiOrder(String path, Booking booking, Agent agent, Contractor contractor) {
+    public byte[] generateTaxiOrder(String path, Booking booking, Contractor contractor) {
         PdfReader reader;
         try {
             InputStream inputStream = getClass().getClassLoader()
@@ -64,7 +64,7 @@ public class PdfUtil {
 
             addressY = 564;
 
-            // agent
+            // contractor
             if (contractor.getEmail() != null) {
                 chunk = new Chunk(contractor.getEmail(), helvetica14);
                 ColumnText.showTextAligned(canvas,

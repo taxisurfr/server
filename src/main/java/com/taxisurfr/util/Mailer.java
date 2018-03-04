@@ -182,7 +182,7 @@ public class Mailer {
         return details;
 
     }
-    public void sendConfirmation(Booking booking, Profile profile, Agent agent, Contractor contractor,boolean share) {
+    public void sendConfirmation(Booking booking, Profile profile, Contractor contractor,boolean share) {
         String html = "error";
         html = toConfirmationEmailHtml(booking, CONFIRMATION, profile,toPairList(booking,true));
         String confirmationString = profile.getTaxisurfUrl().contains("localhost")?"TEST Confirmation":"Booking Confirmation";

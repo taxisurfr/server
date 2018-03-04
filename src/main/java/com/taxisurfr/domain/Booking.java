@@ -8,7 +8,7 @@ import java.util.Date;
 @Entity
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Booking.getByAgent", query = "SELECT s FROM Booking s WHERE s.agent = :agent and (bookingStatus=:bookingStatus1 or bookingStatus=:bookingStatus2 )order by instanziated"),
+    @NamedQuery(name = "Booking.getByContractor", query = "SELECT s FROM Booking s WHERE s.contractor = :contractor and (bookingStatus=:bookingStatus1 or bookingStatus=:bookingStatus2 )order by instanziated"),
     @NamedQuery(name = "Booking.getAllWithStatus", query = "SELECT s FROM Booking s WHERE (bookingStatus=:bookingStatus1 or bookingStatus=:bookingStatus2 )order by instanziated"),
     @NamedQuery(name = "Booking.getByRoute", query = "SELECT s FROM Booking s WHERE (s.price.startroute = :start or s.price.endroute= :end) and (s.orderType=:orderType1 OR s.orderType=:orderType2)order by date"),
     @NamedQuery(name = "Booking.getByRouteX", query = "SELECT s FROM Booking s order by date"),

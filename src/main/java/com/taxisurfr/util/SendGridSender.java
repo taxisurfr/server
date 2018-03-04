@@ -17,6 +17,7 @@ public class SendGridSender {
         sendWithFrom(subject,"dispatch@taxisurfr.com", toEmail, htmlBody,  profile);
     }
     public void sendWithFrom(String subject, String fromEmail, String toEmail, String htmlBody, Profile profile) {
+        logger.info("confirmation to:"+toEmail+" "+subject);
         Email from = new Email(fromEmail);
         Email to = new Email(toEmail);
         Content content = new Content("text/html", htmlBody);

@@ -107,14 +107,14 @@ public class BookingManager extends AbstractDao<Booking> {
         return shares;
     }
 
-    public BookingModel getBookings(Agent agent, boolean admin) {
+    public BookingModel getBookings(Contractor contractor, boolean admin) {
         BookingModel bookingModel = new BookingModel();
         bookingModel.admin = admin;
         try {
 
             bookingModel.bookingList = !admin ?
-                    getEntityManager().createNamedQuery("Booking.getByAgent")
-                            .setParameter("agent", agent.getId())
+                    getEntityManager().createNamedQuery("Booking.getByContractor")
+                            .setParameter("contractor", contractor.getId())
                             .setParameter("bookingStatus1", BookingStatus.PAID)
                             .setParameter("bookingStatus2", BookingStatus.CANCELED)
                             .getResultList() :

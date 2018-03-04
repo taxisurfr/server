@@ -48,7 +48,6 @@ public class StripePayment {
         Profile profile = profileManager.getProfile();
         try {
             Contractor contractor = booking.getPrice().getContractor();
-            Agent agent = agentManager.find(contractor.getAgentId());
 
             Finance finance = new Finance();
             finance.setType(FinanceType.PAYMENT);
@@ -67,11 +66,11 @@ public class StripePayment {
                 booking.setPaidPrice((int)centsToPay);
                 booking.setRef(contractor.getOrderCount() + "_" + booking.getName());
                 byte[] pdfData = new PdfUtil()
-                        .generateTaxiOrder("template/order_with_feedback.pdf", booking, agent, contractor);
+                        .generateTaxiOrder("template/order_with_feedback.pdf", booking, contractor);
                 booking.setPdf(pdfData);
                 bookingManager.edit(booking);
 
-                mailer.sendConfirmation(booking, profileManager.getProfile(), agent, contractor, share);
+                mailer.sendConfirmation(booking, profileManager.getProfile(), contractor, share);
                 contractor.getOrderCount();
 
                 financeDao.persist(finance);
@@ -100,7 +99,7 @@ public class StripePayment {
             chargeParams.put("currency", booking.getCurrency().name().toLowerCase());
             chargeParams.put("card", card); // obtained with Stripe.js
             chargeParams.put("description",
-                    "Taxi Charges Sri Lanka - " + booking.getRef() + " - Thank you!");
+                    "Taxi Charges Sri Lanka - " + RouteFormatter.asRoute(booking.getPrice()) + " - Thank you!");
             logger.info("receipt to " + booking.getEmail());
             chargeParams.put("receipt_email", booking.getEmail());
 
