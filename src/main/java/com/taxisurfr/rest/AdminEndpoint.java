@@ -241,8 +241,6 @@ public class AdminEndpoint {
         pricesModel.admin = isAdmin(email);
         pricesModel.prices = pricesManager.getPrices(email, pricesModel.admin);
 
-        Agent agent = !pricesModel.admin ? agentManager.getAgent(email) : null;
-
         pricesModel.locations = locationManager.findAll();
         pricesModel.contractors = contractorManager.getContractorList(true);
         return pricesModel;

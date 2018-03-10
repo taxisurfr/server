@@ -420,3 +420,6 @@ insert into location(id,name)values(	1000	,'ARUGAM BAY');
 insert into location(id,name)values(	1001	,'COLOMBO AIRPORT');
 insert into location(id,name)values(	1002	,'COLOMBO DOWNTOWN');
 insert into location(id,name)values(	1003	,'ELLA');
+insert into location(id,name)values(	1004	,'HABARANA');
+
+
