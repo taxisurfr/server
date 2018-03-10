@@ -111,6 +111,7 @@ public class AdminEndpoint {
         boolean admin = isAdmin(email);
         loginDetailsJS.loginName = admin ? "ADMIN" : contractorManager.getByEmail(email).getName();
         loginDetailsJS.admin = admin;
+        loginDetailsJS.validated = loginDetailsJS.loginName != null && loginDetailsJS.loginName.length() > 2;
         return loginDetailsJS;
     }
 
@@ -160,14 +161,21 @@ public class AdminEndpoint {
         email = peek(email);
         boolean admin = isAdmin(email);
         if (email != null) {
-            Contractor contractor = contractorJS.id != null ? contractorManager.getContractorById(contractorJS.id) : null;
-            financeModel = financeManager.getFinances(admin,contractor);
-            financeModel.contractorIdList = contractorManager.getContractorIdList(admin);
-            if (contractor != null) {
-                financeModel.contractor = contractor;
+            if (admin) {
+                Contractor contractor = contractorJS.id != null ? contractorManager.getContractorById(contractorJS.id) : null;
+                financeModel = financeManager.getFinances(admin, contractor);
+                financeModel.contractorIdList = contractorManager.getContractorIdList(admin);
+                if (contractor != null) {
+                    financeModel.contractor = contractor;
+                } else {
+                    long firstContractorId = financeModel.contractorIdList.get(0).id;
+                    financeModel.contractor = contractorManager.getContractorById(firstContractorId);
+                }
             } else {
-                long firstContractorId = financeModel.contractorIdList.get(0).id;
-                financeModel.contractor = contractorManager.getContractorById(firstContractorId);
+                Contractor contractor = contractorManager.getByEmail(email);
+                financeModel = financeManager.getFinances(admin, contractor);
+                financeModel.contractor = contractor;
+
             }
         }
         return financeModel;

@@ -6,4 +6,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class LoginDetailsJS {
     public String loginName;
     public boolean admin;
+    public boolean validated;
 }
