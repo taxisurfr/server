@@ -112,7 +112,7 @@ public class PricesManager extends AbstractDao<Price> {
         Price price = new Price();
         price.setStartroute(startroute);
         price.setEndroute(endroute);
-        Contractor contractor = contractorManager.getContractorById(0L);
+        Contractor contractor = contractorManager.getContractorById(1L);
         price.setContractor(contractor);
         price.setCents(cents);
 

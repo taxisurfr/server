@@ -272,15 +272,13 @@ public class AdminEndpoint {
         PricesModel pricesModel = new PricesModel();
         pricesModel.admin = isAdmin(email);
 
-        Contractor contractor = priceJS.contractorId == null ?
-                contractorManager.getContractorById(1000L) :
-                contractorManager.getContractorById(priceJS.contractorId);
+        Contractor contractor = contractorManager.getContractorById(priceJS.contractorId);
         if (!priceJS.newPrice) {
             Location start = locationManager.find(priceJS.startroute.getId());
             Location end = locationManager.find(priceJS.endroute.getId());
             Price price = pricesManager.getByLocationAndContractor(start, end, contractor);
             price.setCents(priceJS.cents);
-            if (priceJS.newcontractorId != price.getContractor().getId()) {
+            if (priceJS.newcontractorId !=null && priceJS.newcontractorId != price.getContractor().getId()) {
                 Contractor newContractor = contractorManager.find(priceJS.newcontractorId);
                 price.setContractor(newContractor);
             }
