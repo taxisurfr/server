@@ -144,7 +144,7 @@ public class TaxisurfrImpl {
             sessionJS.country = createSessionStat(headers, query.src, "base");
         } else {
             if (query.link != null) {
-                Route routeFromLink = routeManager.getRouteFromLink(query.link);
+                Price routeFromLink = pricesManager.getFromLink(query.link);
                 if (routeFromLink != null) {
                     createSessionStat(headers, query.src, "routeandsharings" + routeFromLink.getStartroute() + "_" + routeFromLink.getEndroute());
                 }
@@ -245,7 +245,7 @@ public class TaxisurfrImpl {
         String ipaddress = requestHeader.size() > 0 ? requestHeader.get(0) : null;
 
         Long inet_aton = ipaddress != null ? ipAsNumeric(ipaddress) : -1L;
-        //String country = statManager.newSession(userAgent, inet_aton, pickupdropoff, src);
+        String country = statManager.newSession(userAgent, inet_aton, pickupdropoff, src);
         logger.info("createSessionStat" + LocalDateTime.now());
         return "no country";
     }

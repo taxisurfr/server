@@ -30,8 +30,13 @@ public class LocationManager extends AbstractDao<Location> {
         Location location = null;
         try {
             link = link.split(TAXI)[1];
-            link = link.split("-")[index];
+            link = link.split("--")[index];
+            if (link.contains("-")){
+                String[] txt =link.split("-");
+                link = txt[0]+" "+txt[1];
+            }
 
+            link = link.toUpperCase();
             location = (Location) getEntityManager().createNamedQuery("Location.get")
                     .setParameter("name", link)
                     .getResultList().get(0);
@@ -47,7 +52,7 @@ public class LocationManager extends AbstractDao<Location> {
         String endroute = end.getName();
         startroute = startroute.replace(' ', '-').toLowerCase();
         endroute = endroute.replace(' ', '-').toLowerCase();
-        return TAXI + startroute + '-' + endroute;
+        return TAXI + startroute + "--" + endroute;
     }
 
     public List<Location> getLocationLike(String link) {

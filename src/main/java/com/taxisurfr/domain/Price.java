@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
         @NamedQuery(name = "Price.getAll", query = "SELECT s FROM Price s" ),
         @NamedQuery(name = "Price.getByContractor", query = "SELECT s FROM Price s WHERE s.contractor = :contractor" ),
+        @NamedQuery(name = "Price.getByLink", query = "SELECT s FROM Price s WHERE s.link =  :link "),
         @NamedQuery(name = "Price.getByLocation", query = "SELECT s FROM Price s WHERE s.startroute = :start and s.endroute = :end" ),
         @NamedQuery(name = "Price.getByLocationAndContractor", query = "SELECT s FROM Price s WHERE s.startroute = :start and s.endroute = :end and s.contractor= :contractor" )
 })

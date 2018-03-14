@@ -103,7 +103,7 @@ public class PricesManager extends AbstractDao<Price> {
                     createPrice(start, end, price.getCents());
                 }
             }
-            priceList = findPrices(start,end);
+            priceList = findPrices(start, end);
         }
         return priceList;
     }
@@ -116,7 +116,7 @@ public class PricesManager extends AbstractDao<Price> {
         price.setContractor(contractor);
         price.setCents(cents);
 
-        price.setLink(locationManager.getLink(startroute,endroute));
+        price.setLink(locationManager.getLink(startroute, endroute));
         getEntityManager().persist(price);
         mailer.sendPriceCreated(startroute.getName(), endroute.getName());
     }
@@ -129,5 +129,17 @@ public class PricesManager extends AbstractDao<Price> {
 
 
         return priceList;
+    }
+
+    public Price getFromLink(String link) {
+        if (link != null) {
+            List<Price> routes = getEntityManager().createNamedQuery("Price.getByLink")
+                    .setParameter("link", link)
+                    .getResultList();
+            if (routes.size() == 1) {
+                return routes.get(0);
+            }
+        }
+        return null;
     }
 }
