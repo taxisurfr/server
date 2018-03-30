@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -97,10 +98,19 @@ public class TaxisurfrImpl {
     @Path("/routefromlink")
     public RouteAndSharingsJS getRouteFromLink(Query query) throws IllegalArgumentException {
         RouteAndSharingsJS routeAndSharingsJS = new RouteAndSharingsJS();
-        Location start =locationManager.getStartFromLink(query.link);
-        Location end =locationManager.getEndFromLink(query.link);
-        routeAndSharingsJS.prices = pricesManager.getPrices(start,end);
-        routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(start,end);
+        if (query.link != null && query.link.contains("taxi-")) {
+            Location start = locationManager.getStartFromLink(query.link);
+            Location end = locationManager.getEndFromLink(query.link);
+            routeAndSharingsJS.prices = pricesManager.getPrices(start, end);
+            routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(start,end);
+        }
+        if (query.link != null && query.link.contains("offer-")) {
+            String offer = query.link.split("offer-")[1];
+            Price price = pricesManager.getPrice(offer);
+            routeAndSharingsJS.prices = Arrays.asList(price);
+
+            routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(price.getStartroute(),price.getEndroute());
+        }
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
         routeAndSharingsJS.showNoRouteMessage = false;
         return routeAndSharingsJS;

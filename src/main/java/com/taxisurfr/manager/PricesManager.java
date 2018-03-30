@@ -142,4 +142,10 @@ public class PricesManager extends AbstractDao<Price> {
         }
         return null;
     }
+
+    public Price getPrice(String offer) {
+        Long id = Long.parseLong(offer);
+        Price price = getEntityManager().find(Price.class, id);
+        return price;
+    }
 }
