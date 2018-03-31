@@ -43,7 +43,7 @@ public class BookingManager extends AbstractDao<Booking> {
     private SendGridSender sender;
 
     public Booking createBooking(NewBookingJS newBooking, Price price, Agent agent, Contractor contractor) {
-        OrderType orderType = newBooking.announceShare ? OrderType.SHARE_ANNOUNCEMENT : OrderType.BOOKING;
+        OrderType orderType = newBooking.announceShare!=null && newBooking.announceShare ? OrderType.SHARE_ANNOUNCEMENT : OrderType.BOOKING;
         Booking booking = new Booking();
 
         booking.setPrice(price);
