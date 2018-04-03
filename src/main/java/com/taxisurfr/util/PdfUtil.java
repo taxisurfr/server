@@ -71,11 +71,8 @@ public class PdfUtil {
                         Element.ALIGN_LEFT, new Phrase(chunk), INSET + 120, addressY, 0);
             }
 
-            String address = "";
-            if (contractor.getAddress1() != null) address += contractor.getAddress1();
-            if (contractor.getAddress2() != null) address += contractor.getAddress2();
-            if (contractor.getAddress3() != null) address += contractor.getAddress3();
-            if (contractor.getAddress4() != null) address += contractor.getAddress4();
+            String address = contractor.getMobile()!= null ? "+"+ contractor.getMobile():
+                    contractor.getEmail();
 
             addressY -= 42;
             chunk = new Chunk(address, helvetica14);

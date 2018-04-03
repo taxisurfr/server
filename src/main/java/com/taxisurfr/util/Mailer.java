@@ -120,7 +120,7 @@ public class Mailer {
     public void sendShareRequest(Booking sharer, Booking booker, Profile profile, String message) {
         if (booker.getOrderType().equals(OrderType.BOOKING)) {
             String html = "error";
-            html = toConfirmationEmailHtml(sharer, SHARE_REQUEST, profile, toPairList(sharer,true));
+            html = toConfirmationEmailHtml(sharer, SHARE_REQUEST, profile, toPairList(sharer,false));
 
             html = html.replace("____INSERT___DETAILS___", getSharingDetails(sharer));
             html = html.replace("___SHARE_MESSAGE__", message != null ? message : "");
@@ -149,7 +149,7 @@ public class Mailer {
             case SHARE_ACCEPTED:
                 html = toConfirmationEmailHtml(sharer, SHARE_ACCEPTED, profile,toPairList(sharer.getBooker(),true));
 
-                html = html.replace("____INSERT___DETAILS___", getSharingDetails(sharer.getBooker()));
+                html = html.replace("____INSERT___DETAILS___", getSharingDetailsAccepted(sharer.getBooker()));
                 html = html.replace("___BOOK_SHARE_LINK___", profile.getTaxisurfUrlClient() + BOOKSHARE + "/" + sharer.getId());
 
                 sender.send(TITLE_SHARE_REQUEST_AGREED, sharer.getEmail(), html, profile);
@@ -169,6 +169,18 @@ public class Mailer {
 
     private String getSharingDetails(Booking booking) {
         String details = booking.getPrice().getStartroute().getName() + " to " + booking.getPrice().getEndroute().getName() + "\n";
+        details += booking.getName();
+        details += booking.getEmail();
+        details += booking.getDateText();
+        details += booking.getLandingTime();
+        return details;
+
+    }
+
+    private String getSharingDetailsAccepted(Booking booking) {
+        String details = booking.getPrice().getStartroute().getName() + " to " + booking.getPrice().getEndroute().getName() + "\n";
+        details += booking.getName();
+        details += booking.getEmail();
         details += booking.getDateText();
         details += booking.getLandingTime();
         return details;
