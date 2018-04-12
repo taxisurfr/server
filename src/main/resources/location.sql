@@ -422,4 +422,22 @@ insert into location(id,name)values(	1002	,'COLOMBO DOWNTOWN');
 insert into location(id,name)values(	1003	,'ELLA');
 insert into location(id,name)values(	1004	,'HABARANA');
 
+insert into location(id,name)values(	1005	,'UNAWATUNA');
+insert into location(id,name)values(	1006	,'YALA TISSAMAHARAMA');
+insert into location(id,name)values(	1007	,'TANGALLE');
+insert into location(id,name)values(	1008	,'BATIKALLO');
+insert into location(id,name)values(	1009	,'POLUNARUWA');
+insert into location(id,name)values(	1010	,'MIDIGAMA');
+insert into location(id,name)values(	1011	,'HIKKADUWA');
+insert into location(id,name)values(	1012	,'PASSIKUDA');
+insert into location(id,name)values(	1013	,'KITULGALA');
+
+
+
+
+
+
+
+
+
 
