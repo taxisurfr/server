@@ -9,7 +9,6 @@ public class PriceJS {
     public Long endrouteId;
     public Long cents;
     public Long contractorId;
-    public Long newcontractorId;
     public Long id;
 }
 

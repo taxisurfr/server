@@ -7,4 +7,5 @@ public class LoginDetailsJS {
     public String loginName;
     public boolean admin;
     public boolean validated;
+    public Long contractorId;
 }

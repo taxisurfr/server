@@ -112,6 +112,9 @@ public class AdminEndpoint {
         loginDetailsJS.loginName = admin ? "ADMIN" : contractorManager.getByEmail(email).getName();
         loginDetailsJS.admin = admin;
         loginDetailsJS.validated = loginDetailsJS.loginName != null && loginDetailsJS.loginName.length() > 2;
+        if (!admin){
+            loginDetailsJS.contractorId = contractorManager.getByEmail(email).getId();
+        }
         return loginDetailsJS;
     }
 
@@ -272,17 +275,14 @@ public class AdminEndpoint {
         PricesModel pricesModel = new PricesModel();
         pricesModel.admin = isAdmin(email);
 
-        Long contractorId = priceJS.newPrice ? priceJS.newcontractorId : priceJS.contractorId;
-        Contractor contractor = contractorManager.getContractorById(contractorId);
+        Contractor contractor = contractorManager.getContractorById(priceJS.contractorId);
         if (!priceJS.newPrice) {
             Location start = locationManager.find(priceJS.startrouteId);
             Location end = locationManager.find(priceJS.endrouteId);
-            Price price = pricesManager.getByLocationAndContractor(start, end, contractor);
+            Price price = pricesManager.find(priceJS.id);
             price.setCents(priceJS.cents);
-            if (priceJS.newcontractorId !=null && priceJS.newcontractorId != price.getContractor().getId()) {
-                Contractor newContractor = contractorManager.find(priceJS.newcontractorId);
+                Contractor newContractor = contractorManager.find(priceJS.contractorId);
                 price.setContractor(newContractor);
-            }
             pricesManager.persist(price);
 
         } else {
