@@ -1,0 +1,1 @@
+ALTER TABLE price ADD return boolean;

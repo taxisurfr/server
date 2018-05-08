@@ -33,6 +33,9 @@ public class Price implements java.io.Serializable {
     private Long cents;
 
     @Column
+    private Boolean isreturn;
+
+    @Column
     private String link;
     public String getLink() {
         return link;
@@ -83,6 +86,11 @@ public class Price implements java.io.Serializable {
         this.cents = cents;
     }
 
+    public boolean isReturn() {
+        return isreturn != null && isreturn;
+    }
 
-
+    public void setReturn(boolean isreturn) {
+        this.isreturn = isreturn;
+    }
 }
