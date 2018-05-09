@@ -1,1 +1,1 @@
-ALTER TABLE price ADD return boolean;
+ALTER TABLE price ADD isreturn boolean;

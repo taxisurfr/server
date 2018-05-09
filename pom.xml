@@ -92,7 +92,7 @@
         <dependency>
             <groupId>com.stripe</groupId>
             <artifactId>stripe-java</artifactId>
-            <version>RELEASE</version>
+            <version>4.2.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.sendgrid/sendgrid-java -->
         <dependency>
