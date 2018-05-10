@@ -27,13 +27,11 @@ public class SendGridSender {
         SendGrid sg = new SendGrid(profile.getSendGridKey());
         Request request = new Request();
         try {
-            request.method = Method.POST;
-            request.endpoint = "mail/send";
-            request.body = mail.build();
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
             Response response = sg.api(request);
-            System.out.println(response.statusCode);
-            System.out.println(response.body);
-            System.out.println(response.headers);
+            logger.info("statusCode:"+response.getStatusCode());
         } catch (IOException ex) {
             logger.severe(ex.getMessage());
         }
@@ -46,10 +44,10 @@ public class SendGridSender {
             SendGrid sg = new SendGrid(profile.getSendGridKey());
 
             Request request = new Request();
-            request.method = Method.POST;
-            request.endpoint = "contactdb/recipients";
+            request.setMethod(Method.POST);
+            request.setEndpoint("contactdb/recipients");
 
-            request.body = EMAIL.replace("XXX",email);
+            request.setBody(EMAIL.replace("XXX",email));
             Response response = sg.api(request);
 
         } catch (IOException ex) {

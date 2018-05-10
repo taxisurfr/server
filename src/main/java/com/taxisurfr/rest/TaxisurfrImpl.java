@@ -151,16 +151,17 @@ public class TaxisurfrImpl {
     public SessionJS getRouteAndBookingsSession(@Context HttpHeaders headers, PickupDropoff query) throws IllegalArgumentException {
         SessionJS sessionJS = new SessionJS();
         if ("base".equals(query.link)) {
-            sessionJS.country = createSessionStat(headers, query.src, "base");
+            //sessionJS.country = createSessionStat(headers, query.src, "base");
         } else {
-            if (query.link != null) {
+            createSessionStat(headers, query.link, "see link");
+            /*if (query.link != null) {
                 Price routeFromLink = pricesManager.getFromLink(query.link);
                 if (routeFromLink != null) {
-                    createSessionStat(headers, query.src, "routeandsharings" + routeFromLink.getStartroute() + "_" + routeFromLink.getEndroute());
+                    createSessionStat(headers, query.link, "see link");
                 }
             } else if (query.pickup != null) {
                 createSessionStat(headers, query.src, "routeandsharings" + query.pickup + "_" + query.dropoff);
-            }
+            }*/
         }
         return sessionJS;
     }

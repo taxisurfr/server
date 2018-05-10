@@ -87,7 +87,6 @@ public class StatManager extends AbstractDao<SessionStat> {
             }
         }
         sessionStat.setCountry(country);
-        sessionStat.setTime(LocalDateTime.now());
         persist(sessionStat);
 
         return country;
