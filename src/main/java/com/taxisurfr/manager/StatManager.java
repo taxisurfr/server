@@ -59,7 +59,7 @@ public class StatManager extends AbstractDao<SessionStat> {
         String report = "sessions:" + list.size();
         for (SessionStat stat : list) {
             report +=
-                "<br> country=" + stat.getCountry() + "  type=" +stat.getRouteKey();
+                "<br> country=" + stat.getCountry() + "\t\tsrc=" +stat.getSrc();
 
         }
 
