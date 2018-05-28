@@ -129,8 +129,7 @@ public class AdminEndpoint {
         if (email != null) {
             Contractor contractor = contractorManager.find(transferJS.contractorId);
             financeManager.saveTransfer(contractor.getEmail(), admin, transferJS.cents, transferJS.description);
-            FinanceModel financeModel = financeManager.getFinances(admin, contractor);
-            return financeModel;
+            return getFinanceModel(email,contractor.getId());
         } else {
             return null;
         }
@@ -159,13 +158,17 @@ public class AdminEndpoint {
     @Authenicate
     public FinanceModel finance(@Context SecurityContext sc, ContractorJS contractorJS) throws IllegalArgumentException {
         logger.info("");
-        FinanceModel financeModel = null;
         String email = sc.getUserPrincipal() != null ? sc.getUserPrincipal().getName() : null;
         email = peek(email);
+        return getFinanceModel(email, contractorJS.id);
+    }
+
+    private FinanceModel getFinanceModel(String email, Long contractorId){
+        FinanceModel financeModel = null;
         boolean admin = isAdmin(email);
         if (email != null) {
             if (admin) {
-                Contractor contractor = contractorJS.id != null ? contractorManager.getContractorById(contractorJS.id) : null;
+                Contractor contractor = contractorId != null ? contractorManager.getContractorById(contractorId) : null;
                 financeModel = financeManager.getFinances(admin, contractor);
                 financeModel.contractorIdList = contractorManager.getContractorIdList(admin);
                 if (contractor != null) {
@@ -182,6 +185,7 @@ public class AdminEndpoint {
             }
         }
         return financeModel;
+
     }
 
     private String peek(String email){
