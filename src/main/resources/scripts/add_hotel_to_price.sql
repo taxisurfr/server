@@ -1,0 +1,1 @@
+ALTER TABLE price ADD hotel_id bigint references hotel;

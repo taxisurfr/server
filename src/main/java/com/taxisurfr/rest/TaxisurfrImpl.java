@@ -46,6 +46,9 @@ public class TaxisurfrImpl {
     ContractorManager contractorManager;
 
     @Inject
+    HotelManager hotelManager;
+
+    @Inject
     StatManager statManager;
 
     @Inject
@@ -103,6 +106,7 @@ public class TaxisurfrImpl {
             Location end = locationManager.getEndFromLink(query.link);
             routeAndSharingsJS.prices = pricesManager.getPrices(start, end);
             routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(start,end);
+            routeAndSharingsJS.hotels = hotelManager.getHotelsAtLocation(end);
         }
         if (query.link != null && query.link.contains("offer-")) {
             String offer = query.link.split("offer-")[1];
@@ -110,6 +114,10 @@ public class TaxisurfrImpl {
             routeAndSharingsJS.prices = Arrays.asList(price);
 
             routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(price.getStartroute(),price.getEndroute());
+        }
+        if (query.link != null && query.link.contains("hotel-")) {
+            String hotelLink = query.link.split("hotel-")[1];
+            routeAndSharingsJS.hotel = hotelManager.getByLink(hotelLink);
         }
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
         routeAndSharingsJS.showNoRouteMessage = false;
@@ -142,7 +150,6 @@ public class TaxisurfrImpl {
         routeAndSharingsJS.sharingList = bookingManager.getSharingsForRoute(start,end);
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
         routeAndSharingsJS.showNoRouteMessage = false;
-
         return routeAndSharingsJS;
     }
 

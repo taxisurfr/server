@@ -1,7 +1,7 @@
 package com.taxisurfr.rest.js;
 
+import com.taxisurfr.domain.Hotel;
 import com.taxisurfr.domain.Price;
-import com.taxisurfr.domain.Route;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
@@ -19,8 +19,10 @@ public class RouteAndSharingsJS {
         public int orderType;
     }
 
+    public Hotel hotel;
     public List<Price> prices;
     public List<Share> sharingList;
+    public List<Hotel> hotels;
     public String stripeKey;
     public boolean showNoRouteMessage;
 }
