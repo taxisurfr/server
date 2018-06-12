@@ -59,7 +59,7 @@ public class StatManager extends AbstractDao<SessionStat> {
         String report = "sessions:" + list.size();
         for (SessionStat stat : list) {
             report +=
-                "<br> country=" + stat.getCountry() + "\t\tsrc=" +stat.getSrc();
+                "<br> country=" + stat.getCountry() + "\t\troute=" +stat.getRoute()+ "\t\tsrc=" +stat.getSrc();
 
         }
 
@@ -67,7 +67,7 @@ public class StatManager extends AbstractDao<SessionStat> {
         deleteAll();
     }
 
-    public String newSession(String userAgent, Long ipaddress, String route, String src) {
+    public String newSession(String userAgent, Long ipaddress, String src, String route) {
         String country = "XXX";
         SessionStat sessionStat = new SessionStat();
         sessionStat.setSrc(src);

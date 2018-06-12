@@ -21,3 +21,4 @@ create table hotel
 
 INSERT INTO hotel (id, name,email, web, logo,facebook,link,location_id) VALUES (1000, 'Tea Tree Resort','theteatree.resort@gmail.com', 'http://theteatree.lk/', 'https://goo.gl/4MZPQb','https://www.facebook.com/theteatree.lk/','the-tea-tree',1003);
 
+GRANT all on hotel TO public;

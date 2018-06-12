@@ -160,7 +160,7 @@ public class TaxisurfrImpl {
         if ("base".equals(query.link)) {
             //sessionJS.country = createSessionStat(headers, query.src, "base");
         } else {
-            createSessionStat(headers, query.link, "see link");
+            createSessionStat(headers, query.link, query.src);
             /*if (query.link != null) {
                 Price routeFromLink = pricesManager.getFromLink(query.link);
                 if (routeFromLink != null) {
