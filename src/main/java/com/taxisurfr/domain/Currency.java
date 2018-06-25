@@ -7,8 +7,10 @@ public enum Currency implements Serializable
     EUR("EUR €"),
     USD("$US"),
     AUD("$AU"),
-    GBP("GBP £");
+    GBP("GBP £"),
+    LKR("LKR ₨");
     public String symbol;
+    public Double exchangeRate;
 
     Currency(String sym)
     {

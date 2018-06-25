@@ -50,7 +50,7 @@ import java.util.Date;
     private Boolean rated;
     private String stripeRefusal;
     @Column private Timestamp date;
-    @Column private Currency currency = Currency.USD;
+    @Column private Currency currency;
 
     public Timestamp getDate()
     {
@@ -276,7 +276,7 @@ import java.util.Date;
     }
 
 
-    private void setCurrency(Currency currency)
+    public void setCurrency(Currency currency)
     {
         this.currency = currency;
     }

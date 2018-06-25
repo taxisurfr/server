@@ -19,4 +19,6 @@ public class NewBookingJS {
     public String requirements;
     public Boolean shareWanted;
     public Boolean announceShare;
+    public String currency;
+    public Double exchangeRate;
 }

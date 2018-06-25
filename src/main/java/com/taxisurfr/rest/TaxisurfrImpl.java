@@ -63,11 +63,15 @@ public class TaxisurfrImpl {
     @Inject
     Logger logger;
 
+    @Inject
+    ExchangeRateManager exchangeRateManager;
+
     @GET
     @Path("/daily")
     public void daily() throws IllegalArgumentException {
         logger.info("daily");
         statManager.sendDaily(profileManager.getProfile());
+        exchangeRateManager.dailyUpdate();
     }
 
     @POST
@@ -99,7 +103,7 @@ public class TaxisurfrImpl {
 
     @POST
     @Path("/routefromlink")
-    public RouteAndSharingsJS getRouteFromLink(Query query) throws IllegalArgumentException {
+    public RouteAndSharingsJS getRouteFromLink(@Context HttpHeaders headers, Query query) throws IllegalArgumentException {
         RouteAndSharingsJS routeAndSharingsJS = new RouteAndSharingsJS();
         if (query.link != null && query.link.contains("taxi-")) {
             Location start = locationManager.getStartFromLink(query.link);
@@ -121,6 +125,10 @@ public class TaxisurfrImpl {
         }
         routeAndSharingsJS.stripeKey = profileManager.getProfile().getStripePublishable();
         routeAndSharingsJS.showNoRouteMessage = false;
+        Currency currency = createSessionStat(headers,query.link,query.link);
+        Double exchangeRate = currency.exchangeRate;
+        routeAndSharingsJS.currency=currency;
+        routeAndSharingsJS.exchangeRate=exchangeRate;
         return routeAndSharingsJS;
     }
 
@@ -160,7 +168,7 @@ public class TaxisurfrImpl {
         if ("base".equals(query.link)) {
             //sessionJS.country = createSessionStat(headers, query.src, "base");
         } else {
-            createSessionStat(headers, query.link, query.src);
+            sessionJS.currency = createSessionStat(headers, query.link, query.src);
             /*if (query.link != null) {
                 Price routeFromLink = pricesManager.getFromLink(query.link);
                 if (routeFromLink != null) {
@@ -225,8 +233,10 @@ public class TaxisurfrImpl {
         Contractor contractor = contractorManager.find(booking.price.getContractor().getId());
         Agent agent = agentManager.find(contractor.getAgentId());
         Price price = pricesManager.find(booking.price.getId());
+        Currency currency = Currency.valueOf(booking.currency);
+        Double customerPrice = (price.getCents()*booking.exchangeRate);
         createSessionStat(headers, "", "newbooking:" + booking.price.getStartroute().getName() + "_" + booking.price.getEndroute().getName());
-        return bookingManager.createBooking(booking, price, agent, contractor);
+        return bookingManager.createBooking(booking, price, agent, contractor,currency,customerPrice);
     }
 
     @POST
@@ -236,6 +246,7 @@ public class TaxisurfrImpl {
         logger.info("payment");
         Booking booking = bookingManager.find(stripePaymentJS.bookingId);
         String paymentError = financeManager.payment(stripePaymentJS.token, booking, stripePaymentJS.share);
+
         PaymentResultJS paymentResultJS = new PaymentResultJS();
         paymentResultJS.ok = paymentError == null;
         paymentResultJS.error = paymentError;
@@ -250,7 +261,7 @@ public class TaxisurfrImpl {
                 Long.parseLong(segments[3]));
     }
 
-    public String createSessionStat(HttpHeaders headers, String src, String pickupdropoff) {
+    public Currency createSessionStat(HttpHeaders headers, String src, String pickupdropoff) {
         logger.info("createSessionStat" + LocalDateTime.now());
         String userAgent = headers.getRequestHeader("user-agent").get(0);
         for (String agent : new String[]{"Chrome", "Firefox", "iPhone", "iPad"}) {
@@ -263,9 +274,8 @@ public class TaxisurfrImpl {
         String ipaddress = requestHeader.size() > 0 ? requestHeader.get(0) : null;
 
         Long inet_aton = ipaddress != null ? ipAsNumeric(ipaddress) : -1L;
-        String country = statManager.newSession(userAgent, inet_aton, pickupdropoff, src);
-        logger.info("createSessionStat" + LocalDateTime.now());
-        return "no country";
+        Currency currency = statManager.newSession(userAgent, inet_aton, pickupdropoff, src);
+        return currency;
     }
 
     @POST

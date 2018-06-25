@@ -1,5 +1,6 @@
 package com.taxisurfr.rest.js;
 
+import com.taxisurfr.domain.Currency;
 import com.taxisurfr.domain.Hotel;
 import com.taxisurfr.domain.Price;
 
@@ -25,6 +26,8 @@ public class RouteAndSharingsJS {
     public List<Hotel> hotels;
     public String stripeKey;
     public boolean showNoRouteMessage;
+    public Currency currency;
+    public Double exchangeRate;
 }
 
 

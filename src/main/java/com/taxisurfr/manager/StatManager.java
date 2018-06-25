@@ -1,5 +1,7 @@
 package com.taxisurfr.manager;
 
+import com.taxisurfr.domain.Currency;
+import com.taxisurfr.domain.ExchangeRate;
 import com.taxisurfr.domain.Profile;
 import com.taxisurfr.domain.SessionStat;
 import com.taxisurfr.rest.js.NewSessionJS;
@@ -8,7 +10,9 @@ import com.taxisurfr.util.Mailer;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Stateless
@@ -16,8 +20,16 @@ public class StatManager extends AbstractDao<SessionStat> {
     private static final Logger logger = Logger.getLogger(StatManager.class.getName());
     public static String newline = System.getProperty("line.separator");
 
+    private static final Map<String,Currency> currencyMap = new HashMap<>();
+    static {
+        currencyMap.put("Australia",Currency.AUD);
+    }
+
     @Inject
     private Mailer mailer;
+
+    @Inject
+    ExchangeRateManager exchangeRateManager;
 
     @Inject Ip2NationManager ip2NationManager;
     @Inject
@@ -67,7 +79,7 @@ public class StatManager extends AbstractDao<SessionStat> {
         deleteAll();
     }
 
-    public String newSession(String userAgent, Long ipaddress, String src, String route) {
+    public Currency newSession(String userAgent, Long ipaddress, String src, String route) {
         String country = "XXX";
         SessionStat sessionStat = new SessionStat();
         sessionStat.setSrc(src);
@@ -89,30 +101,19 @@ public class StatManager extends AbstractDao<SessionStat> {
         sessionStat.setCountry(country);
         persist(sessionStat);
 
-        return country;
+        Currency currency = currencyMap.get(country);
+        if (currency == null){
+            currency = Currency.EUR;
+        }
+        setExchangeRate(currency);
+        return currency;
 
     }
-    //    public void updateSessionStat(StatInfo statInfo)
-    //    {
-    //        SessionStat sessionStat = ofy().load().type(SessionStat.class).filter("ip", statInfo.getIp()).first().now();
-    //        if (sessionStat != null)
-    //        {
-    //            switch (statInfo.getUpdate())
-    //            {
-    //                case TYPE:
-    //                    sessionStat.setType(statInfo.getDetail());
-    //                    break;
-    //                case ROUTE:
-    //                    sessionStat.setRoute(statInfo.getDetail());
-    //                    break;
-    //            }
-    //            ofy().save().entity(sessionStat).now();
-    //        }
-    //        else
-    //        {
-    //            logger.log(Level.SEVERE, "not session found for ip " + statInfo.getIp());
-    //        }
-    //     }
-    //
-
+    private void setExchangeRate(Currency currency){
+        ExchangeRate exchangeRateCurrency = exchangeRateManager.getByCurrency(currency);
+        ExchangeRate exchangeRateLKR = exchangeRateManager.getByCurrency(Currency.LKR);
+        Double euroRate = currency.equals(Currency.EUR) ? 1 : exchangeRateCurrency.getValue();
+        Double lkrRate = euroRate / exchangeRateLKR.getValue();
+        currency.exchangeRate = lkrRate;
+    }
 }

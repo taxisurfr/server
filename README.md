@@ -18,12 +18,13 @@ oc project xxx
 
 oc new-app postgresql-persistent -p POSTGRESQL_DATABASE=taxisurfr -p POSTGRESQL_PASSWORD=adminrpbs8pt -p POSTGRESQL_USER=cRNYjds4y8M
 oc get pods
-oc rsync data postgresql-1-8cj93:/var/lib/pgsql
+oc rsync data  postgresql-6-srwnn:/var/lib/pgsql
 gunzip taxisufr.gz
 psql taxisurfr < /var/lib/pgsql/data/taxisufrf.gz
 
 psql -d taxisurfr
 
+select * from price;
 
 GRANT USAGE ON SCHEMA public to readonly;
 

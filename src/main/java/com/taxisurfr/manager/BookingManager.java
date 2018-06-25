@@ -10,7 +10,6 @@ import com.taxisurfr.util.SendGridSender;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.Column;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,7 +41,7 @@ public class BookingManager extends AbstractDao<Booking> {
     @Inject
     private SendGridSender sender;
 
-    public Booking createBooking(NewBookingJS newBooking, Price price, Agent agent, Contractor contractor) {
+    public Booking createBooking(NewBookingJS newBooking, Price price, Agent agent, Contractor contractor, Currency currency, Double customerPrice) {
         OrderType orderType = newBooking.announceShare!=null && newBooking.announceShare ? OrderType.SHARE_ANNOUNCEMENT : OrderType.BOOKING;
         Booking booking = new Booking();
 
@@ -61,15 +60,15 @@ public class BookingManager extends AbstractDao<Booking> {
         booking.setOrderType(orderType);
         booking.setStatus(BookingStatus.BOOKED);
         booking.setShareWanted(newBooking.shareWanted);
+        booking.setCurrency(currency);
+        customerPrice *= 100;
+        booking.setPaidPrice(customerPrice.intValue());
         persist(booking);
         if (orderType==OrderType.SHARE_ANNOUNCEMENT){
             mailer.sendShareAnnouncementNotificationToDispatch(booking,profileManager.getProfile());
         }
         return booking;
     }
-
-    @Column
-    private Currency currency = Currency.USD;
 
     public List<RouteAndSharingsJS.Share> getSharingsForRoute(Location start, Location end) {
         List<RouteAndSharingsJS.Share> shares = new ArrayList<>();

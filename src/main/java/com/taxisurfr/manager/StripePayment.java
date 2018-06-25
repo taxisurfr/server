@@ -51,14 +51,14 @@ public class StripePayment {
 
             Finance finance = new Finance();
             finance.setType(FinanceType.PAYMENT);
-            finance.setCurrency(Currency.USD);
+            finance.setCurrency(booking.getCurrency());
             finance.setName(booking.getOrderRef());
             finance.setDate(new Timestamp(new Date().getTime()));
             finance.setAgentEmail(contractor.getEmail());
 
-            long centsToPay = booking.getPrice().getCents();
+            long centsToPay = booking.getPaidPrice();
 
-            finance.setAmount((int)centsToPay);
+            finance.setAmount(booking.getPrice().getCents().intValue());
             finance.setBookingId(booking.getId());
 
             error = charge(token, booking, finance, (int)centsToPay);
