@@ -8,7 +8,11 @@ public enum Currency implements Serializable
     USD("$US"),
     AUD("$AU"),
     GBP("GBP £"),
-    LKR("LKR ₨");
+    LKR("LKR ₨"),
+    NZD("NZD $NZ"),
+    RUB("RUB RUB"),
+    JPY("JPY JPY");
+
     public String symbol;
     public Double exchangeRate;
 

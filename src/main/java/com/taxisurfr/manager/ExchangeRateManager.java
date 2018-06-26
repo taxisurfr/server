@@ -23,11 +23,18 @@ public class ExchangeRateManager extends AbstractDao<ExchangeRate>{
     public ExchangeRateManager() {
         super(ExchangeRate.class);
     }
-    private static final String URL = "http://data.fixer.io/api/latest?access_key=cddb1101f41431100b2d9977b318588c&symbols=USD,LKR,AUD,GBP&format=1";
+    //private static String URL = "http://data.fixer.io/api/latest?access_key=cddb1101f41431100b2d9977b318588c&symbols=USD,LKR,AUD,GBP&format=1";
+    private static String URL = "http://data.fixer.io/api/latest?access_key=cddb1101f41431100b2d9977b318588c&symbols=%s&format=1";
 
     public void dailyUpdate() {
 
         Client client = ClientBuilder.newClient();
+        String currencyList = "";
+        for (Currency currency : Currency.values()){
+            currencyList += ","+currency.toString();
+        }
+        currencyList = currencyList.substring(1,currencyList.length());
+        URL = String.format(URL,currencyList);
         WebTarget userTarget = client.target(URL);
         Response response = userTarget
                 .request("application/json").get();
@@ -42,10 +49,9 @@ public class ExchangeRateManager extends AbstractDao<ExchangeRate>{
             e.printStackTrace();
         }
 
-        save(Currency.LKR, exchangeRateData.getRates());
-        save(Currency.AUD, exchangeRateData.getRates());
-        save(Currency.USD, exchangeRateData.getRates());
-        save(Currency.GBP, exchangeRateData.getRates());
+        for (Currency currency: Currency.values()) {
+            save(currency, exchangeRateData.getRates());
+        }
     }
 
     private void save(Currency currency, ExchangeRateData.Rates rates ){

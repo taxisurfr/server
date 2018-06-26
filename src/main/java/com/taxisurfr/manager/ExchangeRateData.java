@@ -2,70 +2,64 @@ package com.taxisurfr.manager;
 
 import com.taxisurfr.domain.Currency;
 
-import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ExchangeRateData {
     public static class Rates {
-        Double usd;
-        Double lkr;
-        Double aud;
-        Double gbp;
+        Map<Currency,Double> values = new HashMap<>();
 
         public Double getGbp() {
-            return gbp;
+            return values.get(Currency.GBP);
         }
 
         public void setGbp(Double gbp) {
-            this.gbp = gbp;
+            values.put(Currency.GBP,gbp);
         }
 
         public Double getUsd() {
-            return usd;
+            return values.get(Currency.USD);
         }
 
         public void setUsd(Double usd) {
-            this.usd = usd;
+            values.put(Currency.USD,usd);
         }
 
         public Double getLkr() {
-            return lkr;
+            return values.get(Currency.LKR);
         }
 
-        public void setLkr(Double lkr) {
-            this.lkr = lkr;
+        public void setLkr(Double value) {
+            values.put(Currency.LKR,value);
         }
 
         public Double getAud() {
-            return aud;
+            return values.get(Currency.AUD);
         }
 
-        public void setAud(Double aud) {
-            this.aud = aud;
+        public void setAud(Double value) {
+            values.put(Currency.AUD,value);
         }
 
-        @Override
-        public String toString() {
-            return "Rates{" +
-                    "usd=" + usd +
-                    ", lkr=" + lkr +
-                    ", aud=" + aud +
-                    '}';
+        //NZD
+        public void setNzd(Double value) { values.put(Currency.NZD,value); }
+        public Double getNzd() { return values.get(Currency.NZD); }
+
+        //RUB
+        public void setRub(Double value) { values.put(Currency.RUB,value); }
+        public Double getRub() { return values.get(Currency.RUB); }
+
+        //JPY
+        public void setJpy(Double value) { values.put(Currency.JPY,value); }
+        public Double getJpy() { return values.get(Currency.JPY); }
+
+        public Double get(Currency currency){
+            return values.get(currency);
         }
 
-        public Double get(Currency currency) {
-            switch (currency){
-                case EUR:
-                    return Double.valueOf(1);
-                case USD:
-                    return getUsd();
-                case AUD:
-                    return getAud();
-                case GBP:
-                    return getGbp();
-                case LKR:
-                    return getLkr();
-            }
-            return null;
+        public void setValues(Map<String, Double> values) {
+            Map<String, Double> xxx = values;
+            System.out.println(xxx);
         }
     }
 

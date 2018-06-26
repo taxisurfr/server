@@ -23,6 +23,13 @@ public class StatManager extends AbstractDao<SessionStat> {
     private static final Map<String,Currency> currencyMap = new HashMap<>();
     static {
         currencyMap.put("Australia",Currency.AUD);
+        currencyMap.put("United States",Currency.USD);
+        currencyMap.put("Sri Lanka",Currency.LKR);
+        currencyMap.put("New Zealand",Currency.NZD);
+        currencyMap.put("Japan",Currency.JPY);
+        currencyMap.put("United Kingdom",Currency.GBP);
+        currencyMap.put("Russia",Currency.RUB);
+
     }
 
     @Inject
