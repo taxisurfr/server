@@ -167,16 +167,10 @@ public class TaxisurfrImpl {
         SessionJS sessionJS = new SessionJS();
         if ("base".equals(query.link)) {
             //sessionJS.country = createSessionStat(headers, query.src, "base");
-        } else {
+        } else if (query.link != null) {
             sessionJS.currency = createSessionStat(headers, query.link, query.src);
-            /*if (query.link != null) {
-                Price routeFromLink = pricesManager.getFromLink(query.link);
-                if (routeFromLink != null) {
-                    createSessionStat(headers, query.link, "see link");
-                }
-            } else if (query.pickup != null) {
-                createSessionStat(headers, query.src, "routeandsharings" + query.pickup + "_" + query.dropoff);
-            }*/
+        } else {
+            sessionJS.currency = createSessionStat(headers, "", query.pickup + ":<>:" + query.dropoff);
         }
         return sessionJS;
     }

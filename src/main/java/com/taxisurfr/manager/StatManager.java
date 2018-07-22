@@ -9,7 +9,6 @@ import com.taxisurfr.util.Mailer;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,6 @@ public class StatManager extends AbstractDao<SessionStat> {
 
     public SessionStat addSession(NewSessionJS newSessionJS) {
         SessionStat sessionStat = new SessionStat();
-        sessionStat.setTime(LocalDateTime.now());
         sessionStat.setSrc(extractSrc(newSessionJS.url));
         sessionStat.setRouteKey(newSessionJS.link);
         sessionStat.setCountry(newSessionJS.country);

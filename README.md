@@ -63,9 +63,15 @@ oc rsh postgresql-3-d4xqs
 pg_dump taxisurfr | gzip > tmp/taxisurfr.gz
 exit
 oc rsync postgresql-2-96tww:/tmp/taxisurfr.dump .
+-unpack
+psql -U postgres -d taxisurfr <taxisurfr
+taxisurfr=# select * from profile;
+ id |      monitoremail      | monitormobile | name |                              sendgridkey                              | smspassword |        stripepublishable         |           stripesecret           | taxisurfurl |   taxisurfurlclient   | test
+----+------------------------+---------------+------+-----------------------------------------------------------------------+-------------+----------------------------------+----------------------------------+-------------+-----------------------+------
+  1 | dispatch@taxisurfr.com |               |      | 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 |             | pk_test_rcKuNpP9OpTri7twmZ77UOI5 | sk_test_TCIbuNPlBRe4VowPhqekTO1L |             | http://localhost:3000 | t
 
 -----------------------------------
-psql>DROP DATABASE taxisurfr 
+dropdb -U postgres taxisurfr
 createdb -U postgres -T template0 taxisurfr
 psql -U postgres taxisurfr < taxisurfr.dump
 psql -U postgres -d taxisurfr

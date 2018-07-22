@@ -45,14 +45,6 @@ public class SessionStat implements java.io.Serializable {
     //@Column
     LocalDateTime time;
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
     public String getCardToken() {
         return cardToken;
     }
