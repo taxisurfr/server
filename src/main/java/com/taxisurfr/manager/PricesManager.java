@@ -1,12 +1,19 @@
 package com.taxisurfr.manager;
 
+import com.google.maps.DirectionsApi;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.*;
 import com.taxisurfr.domain.Contractor;
 import com.taxisurfr.domain.Location;
 import com.taxisurfr.domain.Price;
 import com.taxisurfr.util.Mailer;
+import org.joda.time.DateTime;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,6 +34,9 @@ public class PricesManager extends AbstractDao<Price> {
 
     @Inject
     LocationManager locationManager;
+
+    @Inject
+    ProfileManager profileManager;
 
     @Inject
     RouteManager routeManager;
@@ -97,7 +107,7 @@ public class PricesManager extends AbstractDao<Price> {
         if (priceList.size() == 0) {
             priceList = findPrices(end, start);
             if (priceList.size() == 0) {
-                createPrice(start, end, 9999L);
+                createPrice(start, end,null);
             } else {
                 for (Price price : priceList) {
                     createPrice(start, end, price.getCents());
@@ -108,13 +118,64 @@ public class PricesManager extends AbstractDao<Price> {
         return priceList;
     }
 
-    private void createPrice(Location startroute, Location endroute, Long cents) {
+    private long calculatePrice(Location startroute, Location endroute) {
+        Long rupees = 9999L;
+        String apiKey = profileManager.getProfile().getSmspassword();
+        GeoApiContext context = new GeoApiContext.Builder()
+                .apiKey(apiKey)
+                .build();
+
+        String[] origins =
+                new String[]{
+                        startroute.getName() + ", Sri Lanka"
+                };
+        String[] destinations =
+                new String[]{
+                        endroute.getName() + ", Sri Lanka"
+                };
+        try {
+            DistanceMatrix distanceMatrix = DistanceMatrixApi.newRequest(context)
+                    .origins(origins)
+                    .destinations(destinations)
+                    .mode(TravelMode.DRIVING)
+                    .language("en-AU")
+                    .avoid(DirectionsApi.RouteRestriction.TOLLS)
+                    .units(Unit.IMPERIAL)
+                    .departureTime(new DateTime().plusMinutes(2)) // this is ignored when an API key is used
+                    .await();
+            if (distanceMatrix.rows.length > 0) {
+                DistanceMatrixRow row = distanceMatrix.rows[0];
+                if (row.elements.length > 0) {
+                    Distance distance = row.elements[0].distance;
+                    long inMeters = distance.inMeters;
+                    rupees = 50 + (inMeters / 1000 * 45);
+                }
+
+            }
+
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return rupees;
+    }
+
+    private void createPrice(Location startroute, Location endroute, Long returnRupees) {
+        Long rupees = 9876L;
+        if (returnRupees == null) {
+            rupees = calculatePrice(startroute, endroute);
+        } else {
+            rupees = returnRupees;
+        }
         Price price = new Price();
         price.setStartroute(startroute);
         price.setEndroute(endroute);
         Contractor contractor = contractorManager.getByEmail("dispatch@taxisurfr.com");
         price.setContractor(contractor);
-        price.setCents(cents);
+        price.setCents(rupees);
 
         price.setLink(locationManager.getLink(startroute, endroute));
         getEntityManager().persist(price);

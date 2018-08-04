@@ -224,6 +224,7 @@ public class TaxisurfrImpl {
     public Booking addBooking(@Context HttpHeaders headers, NewBookingJS booking) throws IllegalArgumentException {
         logger.info("addBooking");
         //Route route = routeManager.find(booking.price.getRoute().getId());
+        logger.info("price:"+booking.price);
         Contractor contractor = contractorManager.find(booking.price.getContractor().getId());
         Agent agent = agentManager.find(contractor.getAgentId());
         Price price = pricesManager.find(booking.price.getId());
