@@ -107,6 +107,7 @@ public class PricesManager extends AbstractDao<Price> {
         if (priceList.size() == 0) {
             priceList = findPrices(end, start);
             if (priceList.size() == 0) {
+                logger.info("no return: calculate");
                 createPrice(start, end,null);
             } else {
                 for (Price price : priceList) {
@@ -179,7 +180,7 @@ public class PricesManager extends AbstractDao<Price> {
 
         price.setLink(locationManager.getLink(startroute, endroute));
         getEntityManager().persist(price);
-        mailer.sendPriceCreated(startroute.getName(), endroute.getName());
+        mailer.sendPriceCreated(startroute.getName(), endroute.getName(),price.getCents());
     }
 
     private List<Price> findPrices(Location start, Location end) {

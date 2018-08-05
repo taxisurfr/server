@@ -77,8 +77,8 @@ public class Mailer {
         sender.send(TITLE_MISSING_ROUTE, "dispatch@taxisurfr.com", message, profile);
     }
 
-    public void sendPriceCreated(String pickup, String dropoff) {
-        String message = pickup + " to " + dropoff;
+    public void sendPriceCreated(String pickup, String dropoff, long price) {
+        String message = pickup + " to " + dropoff+" price "+price;
         sender.send(TITLE_PRICE_CREATED, "dispatch@taxisurfr.com", message, profileManager.getProfile());
     }
 
