@@ -151,7 +151,7 @@ public class PricesManager extends AbstractDao<Price> {
                     long inMeters = distance.inMeters;
                     rupees = 50 + (inMeters / 1000 * 45);
                 }
-
+xxx
             }
 
         } catch (ApiException e) {
