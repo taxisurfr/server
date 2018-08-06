@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 @Stateless
 public class PricesManager extends AbstractDao<Price> {
+    public static final long MINIMUM_FARE = 4000L;
     @Inject
     Logger logger;
 
@@ -150,6 +151,9 @@ public class PricesManager extends AbstractDao<Price> {
                     Distance distance = row.elements[0].distance;
                     long inMeters = distance.inMeters;
                     rupees = 50 + (inMeters / 1000 * 45);
+                    if (rupees < MINIMUM_FARE){
+                        rupees = MINIMUM_FARE;
+                    }
                 }
             }
 
