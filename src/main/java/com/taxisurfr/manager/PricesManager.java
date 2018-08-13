@@ -150,7 +150,7 @@ public class PricesManager extends AbstractDao<Price> {
                 if (row.elements.length > 0) {
                     Distance distance = row.elements[0].distance;
                     long inMeters = distance.inMeters;
-                    rupees = 50 + (inMeters / 1000 * 45);
+                    rupees = 50 + (inMeters / 1000 * 70);
                     if (rupees < MINIMUM_FARE){
                         rupees = MINIMUM_FARE;
                     }
