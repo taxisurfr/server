@@ -62,7 +62,12 @@ public class PricesManager extends AbstractDao<Price> {
 
             @Override
             public int compare(Price o1, Price o2) {
-                return o1.getStartroute().getName().compareTo(o2.getStartroute().getName());
+                int sComp = o1.getStartroute().getName().compareTo(o2.getStartroute().getName());
+
+                if (sComp != 0) {
+                    return sComp;
+                }
+                return o1.getEndroute().getName().compareTo(o2.getEndroute().getName());
             }
         };
         Collections.sort(pricesList, routeComparator);
