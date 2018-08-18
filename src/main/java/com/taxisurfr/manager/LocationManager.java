@@ -63,7 +63,7 @@ public class LocationManager extends AbstractDao<Location> {
 
     public Location getLocation(String name) {
         logger.info("getLocation:"+name);
-        name = name != null ? name.trim() : "_null_";
+        name = name != null ? name.trim().toUpperCase().replace("-"," ") : "_null_";
         List locations = getEntityManager().createNamedQuery("Location.get")
                 .setParameter("name", name)
                 .getResultList();
