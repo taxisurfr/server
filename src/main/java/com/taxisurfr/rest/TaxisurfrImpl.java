@@ -225,13 +225,18 @@ public class TaxisurfrImpl {
         logger.info("addBooking");
         //Route route = routeManager.find(booking.price.getRoute().getId());
         logger.info("price:"+booking.price);
-        Contractor contractor = contractorManager.find(booking.price.getContractor().getId());
-        Agent agent = agentManager.find(contractor.getAgentId());
-        Price price = pricesManager.find(booking.price.getId());
-        Currency currency = Currency.valueOf(booking.currency);
-        Double customerPrice = (price.getCents()*booking.exchangeRate);
-        createSessionStat(headers, "", "newbooking:" + booking.price.getStartroute().getName() + "_" + booking.price.getEndroute().getName());
-        return bookingManager.createBooking(booking, price, agent, contractor,currency,customerPrice);
+        logger.info("name:"+booking.name);
+        logger.info("date:"+booking.date);
+        if (booking.price != null) {
+            Contractor contractor = contractorManager.find(booking.price.getContractor().getId());
+            Agent agent = agentManager.find(contractor.getAgentId());
+            Price price = pricesManager.find(booking.price.getId());
+            Currency currency = Currency.valueOf(booking.currency);
+            Double customerPrice = (price.getCents() * booking.exchangeRate);
+            createSessionStat(headers, "", "newbooking:" + booking.price.getStartroute().getName() + "_" + booking.price.getEndroute().getName());
+            return bookingManager.createBooking(booking, price, agent, contractor, currency, customerPrice);
+        }
+        return null;
     }
 
     @POST
