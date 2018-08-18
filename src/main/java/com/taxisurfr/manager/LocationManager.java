@@ -63,8 +63,15 @@ public class LocationManager extends AbstractDao<Location> {
 
     public Location getLocation(String name) {
         logger.info("getLocation:"+name);
-        return (Location)getEntityManager().createNamedQuery("Location.get")
+        name = name != null ? name.trim() : "_null_";
+        List locations = getEntityManager().createNamedQuery("Location.get")
                 .setParameter("name", name)
-                .getResultList().get(0);
+                .getResultList();
+        if (locations.size()==0){
+            logger.severe("no locations found for search string:"+name);
+            return null;
+        }else{
+            return (Location) locations.get(0);
+        }
     }
 }
