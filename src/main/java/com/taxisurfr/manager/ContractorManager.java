@@ -66,6 +66,7 @@ public class ContractorManager extends AbstractDao<Contractor> {
     }
 
     public Contractor getByEmail(String email) {
+        logger.info("email of contractor: "+email);
         List<Contractor> contractorList = getEntityManager().createNamedQuery("Contractor.getByEmail")
                 .setParameter("email", email)
                 .getResultList();
