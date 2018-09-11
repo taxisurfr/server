@@ -182,7 +182,7 @@ public class PricesManager extends AbstractDao<Price> {
         Price price = new Price();
         price.setStartroute(startroute);
         price.setEndroute(endroute);
-        Contractor contractor = contractorManager.getByEmail("dispatch@taxisurfr.com");
+        Contractor contractor = contractorManager.getByEmail("newsanjumobile@gmail.com");
         price.setContractor(contractor);
         price.setCents(rupees);
 
