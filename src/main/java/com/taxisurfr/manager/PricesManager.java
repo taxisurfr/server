@@ -154,8 +154,12 @@ public class PricesManager extends AbstractDao<Price> {
                 DistanceMatrixRow row = distanceMatrix.rows[0];
                 if (row.elements.length > 0) {
                     Distance distance = row.elements[0].distance;
-                    long inMeters = distance.inMeters;
-                    rupees = 50 + (inMeters / 1000 * 70);
+                    long inKm = (distance.inMeters)/1000;
+                    if (inKm < 50){
+                        rupees = inKm * 95;
+                    }else{
+                        rupees = 50*95 + (inKm - 50)*85;
+                    }
                     if (rupees < MINIMUM_FARE){
                         rupees = MINIMUM_FARE;
                     }
