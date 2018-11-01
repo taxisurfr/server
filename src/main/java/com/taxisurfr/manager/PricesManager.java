@@ -9,7 +9,6 @@ import com.taxisurfr.domain.Contractor;
 import com.taxisurfr.domain.Location;
 import com.taxisurfr.domain.Price;
 import com.taxisurfr.util.Mailer;
-import org.joda.time.DateTime;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -148,7 +147,7 @@ public class PricesManager extends AbstractDao<Price> {
                     .language("en-AU")
                     .avoid(DirectionsApi.RouteRestriction.TOLLS)
                     .units(Unit.IMPERIAL)
-                    .departureTime(new DateTime().plusMinutes(2)) // this is ignored when an API key is used
+                    //.departureTime(new DateTime().plusMinutes(2)) // this is ignored when an API key is used
                     .await();
             if (distanceMatrix.rows.length > 0) {
                 DistanceMatrixRow row = distanceMatrix.rows[0];
